@@ -21,4 +21,11 @@ describe("Pokemon routes", () => {
   describe("GET /pokemons", () => {
     it("should get 200", () => agent.get("/pokemons").expect(200));
   });
+  describe("GET /pokemons/:id", () => {
+    it("should get status 200", () => agent.get("/pokemons/1").expect(200));
+  });
+  describe("GET /pokemons?name", () => {
+    it("should get status 200", () =>
+      agent.get("/pokemons?name=pikachu").expect(200));
+  });
 });
