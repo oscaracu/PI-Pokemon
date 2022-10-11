@@ -4,16 +4,20 @@ const { DataTypes } = require("sequelize");
 // De esta manera evito la duplicidad de ids provenientes de la API de los provenientes de la BD.
 
 module.exports = (sequelize) => {
-  sequelize.define("source", {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+  sequelize.define(
+    "source",
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
     },
-    url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-  });
+    { timestamps: false }
+  );
 };
