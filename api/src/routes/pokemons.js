@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { Pokemon } = require("../db");
 
 const router = Router();
 
@@ -21,5 +22,11 @@ router.get("/:id", (req, res) => {
 });
 
 // POST routes
+
+router.post("/", async (req, res) => {
+  const { num, name } = req.body;
+  const newPokemon = await Pokemon.create({ num, name });
+  res.send(newPokemon);
+});
 
 module.exports = router;
