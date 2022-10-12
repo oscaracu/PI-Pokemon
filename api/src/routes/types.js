@@ -1,10 +1,10 @@
 const { Router } = require("express");
-const axios = require("axios");
+// const axios = require("axios");
 const { Type } = require("../db");
 
 const router = Router();
 
-//GET Routes
+//GET Route
 
 //Obtiene la lista de todos los tipos de pokemon
 
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST Routes
+// POST Route
 
 // Agrega un nuevo Tipo de Pokemon a la base de datos
 
@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PUT Routes
+// PUT Route
 // Modifica un Tipo de Pokemon en la base de datos
 // Si el id pertenece a los tipos originales manda un mensaje de error
 
@@ -48,12 +48,32 @@ router.put("/", async (req, res) => {
   const { id, name } = req.body;
 
   try {
-    if (!id || !name) throw new Error("data required");
     if (parseInt(id) < 21)
       throw new Error("modifying an original pokemon type is not allowed");
+    if (!id || !name) throw new Error("an id and a name are required");
     const currentType = await Type.findByPk(parseInt(id));
+    if (!currentType) throw new Error("invalid id");
     await currentType.update({ name });
     res.send(currentType);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
+// DELETE Route
+// Borra un Tipo de Pokemon de la base de datos
+// Si el id pertenece a los tiposs originales manda un mensaje de error
+
+router.delete("/", async (req, res) => {
+  const { id } = req.body;
+  try {
+    if (parseInt(id) < 21)
+      throw new Error("deleting an original pokemon type is not allowed");
+    if (!id) throw new Error("an id is required");
+    const currentType = await Type.findByPk(parseInt(id));
+    if (!currentType) throw new Error("invalid id");
+    await currentType.destroy();
+    res.send("type removed sucessfully");
   } catch (error) {
     res.status(400).send(error.message);
   }
