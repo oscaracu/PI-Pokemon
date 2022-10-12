@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 
 // Esta modelo ha sido diseñado para almacenar la URL de los detalles de cada Pokemon en la base de datos
-// De esta manera evito la duplicidad de ids provenientes de la API de los provenientes de la BD.
+// De esta manera evito la duplicidad de ids provenientes de la API de los provenientes de la base de datos local.
 
 module.exports = (sequelize) => {
   sequelize.define(
@@ -14,8 +14,6 @@ module.exports = (sequelize) => {
       },
       url: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
       },
     },
     { timestamps: false }
