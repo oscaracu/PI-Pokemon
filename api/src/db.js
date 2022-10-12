@@ -41,7 +41,7 @@ const { Pokemon, Type, Source } = sequelize.models;
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
-Source.hasOne(Pokemon);
+Source.hasOne(Pokemon, { onDelete: "CASCADE" });
 Pokemon.belongsTo(Source);
 Pokemon.belongsToMany(Type, { through: "pokemontypes" });
 Type.belongsToMany(Pokemon, { through: "pokemontypes" });
