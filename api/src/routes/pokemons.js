@@ -55,13 +55,12 @@ router.post("/", async (req, res) => {
         const currentType = await Type.findByPk(parseInt(type.id));
         dbTypes.push(currentType);
       }
-      console.log(dbTypes);
       await dbPokemon.setTypes(dbTypes);
     } else {
       const defaultType = await Type.findByPk(1);
       await dbPokemon.setTypes(defaultType);
     }
-    res.send(dbPokemon);
+    res.send(dbSource);
   } catch (error) {
     res.status(400).send(error.message);
   }
