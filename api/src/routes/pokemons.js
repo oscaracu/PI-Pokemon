@@ -10,27 +10,15 @@ const router = Router();
 // devuelve el listado de pokemons con los datos necesarios para desplegar la ruta principal del client.
 
 router.get("/", async (req, res) => {
-  // Se recibe offset y limit por query para limitar la carga de resultados desde la API
-  // El valor por defecto de offset será 0 y de limit 12 para cumplir con el boilerplate
   const { name, offset, limit } = req.query;
-  // La lista a desplegar se almacenará en el objeto pokemonList
-  // Contendrá las propiedades next y previous ayudar a la paginación del client
-  const paginationAux = {
-    currentOffset: parseInt(offset) ? parseInt(offset) : null, // Establece valor por defecto de offset
-    currentLimit: parseInt(limit) ? parseInt(limit) : 12, // Establece valor por defecto de limit
-  };
-  const currentDif = paginationAux.currentOffset - paginationAux.currentLimit;
 
-  const pokemonsList = {
-    count: 0,
-    next: null,
-    previous: null,
-    results: [],
-  };
   try {
+    // En esta seccion se procesan los request por query name
+
     if (name) {
       const source = await Source.findOne({ where: { name } });
       if (!source) throw new Error("Pokemon not found");
+      // Si el elemento encontrado no tiene una url se hace una consulta a la base de datos
       if (!source.url) {
         const pokemonDetails = await source.getPokemon({ include: [Type] });
         const currentPokemon = {
@@ -44,6 +32,7 @@ router.get("/", async (req, res) => {
 
         return res.send(currentPokemon);
       } else {
+        // Si el elemento si tiene una url se hace una request a la API externa
         const apiResponse = await axios(source.url);
         const pokemonDetails = apiResponse.data;
         const currentPokemon = {
@@ -57,12 +46,53 @@ router.get("/", async (req, res) => {
         return res.send(currentPokemon);
       }
     }
+
+    // A partir de aqui manejamos el request que lista todos los pokemons cuando no se recibe nombre por query
+    // La lista a desplegar se almacenará en el objeto pokemonList
+    // Contendrá las propiedades next y previous ayudar a la paginación del client
+
+    const paginationAux = {
+      currentOffset: parseInt(offset) ? parseInt(offset) : 0, // Establece valor por defecto de offset
+      currentLimit: parseInt(limit) ? parseInt(limit) : 12, // Establece valor por defecto de limit
+    };
+    const currentDif = paginationAux.currentOffset - paginationAux.currentLimit;
+
+    // Usamos findAndCountAll para obtener el numero de pokemons disponible y los devolvemos en grupos pequeños para evitar demoras de carga
+    // Se recibe offset y limit por query para limitar la carga de resultados desde la API
+    // El valor por defecto de offset será 0 y de limit 12 para cumplir con la paginacion solicitada en el boilerplate
+
     const { count, rows } = await Source.findAndCountAll({
       offset: offset ? offset : 0,
       limit: limit ? limit : 12,
     });
+    const pokemonsList = {
+      count: count,
+      next:
+        paginationAux.currentOffset > count ||
+        paginationAux.currentOffset + paginationAux.currentLimit > count
+          ? null
+          : `?offset=${
+              paginationAux.currentOffset + paginationAux.currentLimit
+            }&limit=${paginationAux.currentLimit}`,
+      previous:
+        paginationAux.currentOffset === 0
+          ? null
+          : `?offset=${
+              currentDif < 0
+                ? 0
+                : paginationAux.currentOffset - paginationAux.currentLimit
+            }&limit=${
+              currentDif < 0
+                ? paginationAux.currentLimit + currentDif
+                : paginationAux.currentLimit
+            }`,
+      results: [],
+    };
+    // Rows contiene un array con los elementos obtenidos con findAndCountAll
     const pokemonsSource = rows;
     for (const source of pokemonsSource) {
+      // Si el elemento encontrado no tiene una url se hace una consulta a la base de datos
+
       if (!source.url) {
         const pokemonDetails = await source.getPokemon({ include: [Type] });
         const currentPokemon = {
@@ -75,6 +105,8 @@ router.get("/", async (req, res) => {
         };
         pokemonsList.results.push(currentPokemon);
       } else {
+        // Si el elemento si tiene una url se hace una request a la API externa
+
         const apiResponse = await axios(source.url);
         const pokemonDetails = apiResponse.data;
         const currentPokemon = {
@@ -85,27 +117,6 @@ router.get("/", async (req, res) => {
             return { name: type.type.name };
           }),
         };
-        // Aqui creamos a los auxiliares de paginación.
-        pokemonsList.previous =
-          paginationAux.currentOffset === null
-            ? null
-            : `?offset=${
-                currentDif < 0
-                  ? 0
-                  : paginationAux.currentOffset - paginationAux.currentLimit
-              }&limit=${
-                currentDif < 0
-                  ? paginationAux.currentLimit + currentDif
-                  : paginationAux.currentLimit
-              }`;
-        pokemonsList.next =
-          paginationAux.currentOffset > count ||
-          paginationAux.currentOffset + paginationAux.currentLimit > count
-            ? null
-            : `?offset=${
-                paginationAux.currentOffset + paginationAux.currentLimit
-              }&limit=${paginationAux.currentLimit}`;
-        pokemonsList.count = count;
         // Almacenamos los resultados
         pokemonsList.results.push(currentPokemon);
       }
