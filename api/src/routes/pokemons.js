@@ -22,7 +22,7 @@ router.get("/:id", (req, res) => {
   res.send(`Soy el pokemon ${id}`);
 });
 
-// POST routes
+// POST route
 
 router.post("/", async (req, res) => {
   // Solicitud inicial a la API pokemon para crear un índice en la base de datos local
@@ -61,6 +61,46 @@ router.post("/", async (req, res) => {
       await dbPokemon.setTypes(defaultType);
     }
     res.send(dbSource);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
+// PUT route
+// Modifica un pokemon existente en la base de datos.
+//Si el id pertenece a un pokemon original envía un mensaje de error
+
+router.put("/", async (req, res) => {
+  const { id, name, image, hp, attack, defense, speed, height, weight, types } =
+    req.body;
+  const newPokemonData = {
+    name,
+    image,
+    hp,
+    attack,
+    defense,
+    speed,
+    height,
+    weight,
+  };
+  try {
+    if (!id) throw new Error("an id is required");
+    if (parseInt(id) < 906)
+      throw new Error("modifying an original pokemon is not allowed");
+    const currentSource = await Source.findByPk(parseInt(id));
+    if (!currentSource) throw new Error("the requested id does not exist");
+    const currentPokemon = await currentSource.getPokemon();
+    await currentSource.update({ name: newPokemonData.name });
+    await currentPokemon.update(newPokemonData);
+    if (types && types.length > 0) {
+      const dbTypes = [];
+      for (const type of types) {
+        const currentType = await Type.findByPk(parseInt(type.id));
+        dbTypes.push(currentType);
+      }
+      await currentPokemon.setTypes(dbTypes);
+    }
+    res.send(currentPokemon);
   } catch (error) {
     res.status(400).send(error.message);
   }
