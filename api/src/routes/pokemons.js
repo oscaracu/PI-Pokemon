@@ -15,10 +15,16 @@ router.get("/", async (req, res) => {
   const { name, offset, limit } = req.query;
   // La lista a desplegar se almacenará en el objeto pokemonList
   // Contendrá las propiedades next y previous ayudar a la paginación del client
+  const paginationAux = {
+    currentOffset: parseInt(offset) ? parseInt(offset) : null, // Establece valor por defecto de offset
+    currentLimit: parseInt(limit) ? parseInt(limit) : 12, // Establece valor por defecto de limit
+  };
+  const currentDif = paginationAux.currentOffset - paginationAux.currentLimit;
+
   const pokemonsList = {
     count: 0,
-    // next: null,
-    // previous: null,
+    next: null,
+    previous: null,
     results: [],
   };
   try {
@@ -79,19 +85,28 @@ router.get("/", async (req, res) => {
             return { name: type.type.name };
           }),
         };
-        // pokemonsList.previous =
-        //   offset === undefined || offset <= 0
-        //     ? pokemonsList.previous
-        //     : `?offset=${parseInt(offset) - parseInt(limit)}&limit=${
-        //         limit === undefined ? 12 : limit
-        //       }`;
-        // pokemonsList.next =
-        //   offset === undefined
-        //     ? `?offset=0&limit=${limit === undefined ? 12 : limit}`
-        //     : `?offset=${parseInt(offset) + parseInt(limit)}&limit=${
-        //         limit === undefined ? 12 : limit
-        //       }`;
+        // Aqui creamos a los auxiliares de paginación.
+        pokemonsList.previous =
+          paginationAux.currentOffset === null
+            ? null
+            : `?offset=${
+                currentDif < 0
+                  ? 0
+                  : paginationAux.currentOffset - paginationAux.currentLimit
+              }&limit=${
+                currentDif < 0
+                  ? paginationAux.currentLimit + currentDif
+                  : paginationAux.currentLimit
+              }`;
+        pokemonsList.next =
+          paginationAux.currentOffset > count ||
+          paginationAux.currentOffset + paginationAux.currentLimit > count
+            ? null
+            : `?offset=${
+                paginationAux.currentOffset + paginationAux.currentLimit
+              }&limit=${paginationAux.currentLimit}`;
         pokemonsList.count = count;
+        // Almacenamos los resultados
         pokemonsList.results.push(currentPokemon);
       }
     }
