@@ -106,4 +106,23 @@ router.put("/", async (req, res) => {
   }
 });
 
+// DELETE route
+// Borra un pokemon de la base de datos.
+// Si el id pertenece a un pokemon original envía un error.
+
+router.delete("/", async (req, res) => {
+  const { id } = req.body;
+  try {
+    if (!id) throw new Error("an id is required");
+    if (parseInt(id) < 906)
+      throw new Error("deleting an original pokemon is not allowed");
+    const currentSource = await Source.findByPk(parseInt(id));
+    if (!currentSource) throw new Error("the requested id does not exist");
+    await currentSource.destroy();
+    res.send("Pokemon successfully eliminated");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 module.exports = router;
