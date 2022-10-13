@@ -25,16 +25,21 @@ router.get("/:id", (req, res) => {
 // POST route
 
 router.post("/", async (req, res) => {
-  // Solicitud inicial a la API pokemon para crear un índice en la base de datos local
-  // const apiRequest = await axios(
-  //   "https://pokeapi.co/api/v2/pokemon/?limit=905"
-  // );
-  // const pokemonList = apiRequest.data.results;
-  // const dbIndex = await Source.bulkCreate(pokemonList);
-  // res.send(dbIndex);
   const { name, image, hp, attack, defense, speed, height, weight, types } =
     req.body;
   try {
+    // Solicitud inicial a la API pokemon para crear un índice en la base de datos local
+    const { count } = await Source.findAndCountAll();
+    if (count === 0) {
+      const apiRequest = await axios(
+        "https://pokeapi.co/api/v2/pokemon/?limit=905"
+      );
+      const pokemonList = apiRequest.data.results;
+      const dbIndex = await Source.bulkCreate(pokemonList);
+      return res.send(dbIndex);
+    }
+
+    // A partir de aqui maneja las solicitudes post de forma normal
     if (!name) throw new Error("a name is required");
     const newPokemon = {
       name,

@@ -1,5 +1,5 @@
 const { Router } = require("express");
-// const axios = require("axios");
+const axios = require("axios");
 const { Type } = require("../db");
 
 const router = Router();
@@ -22,16 +22,21 @@ router.get("/", async (req, res) => {
 // Agrega un nuevo Tipo de Pokemon a la base de datos
 
 router.post("/", async (req, res) => {
-  // Solicitud de datos inicial a la API para alimentar la base de datos local.
-  // const apiRequest = await axios("https://pokeapi.co/api/v2/type/");
-  // const apiData = apiRequest.data.results;
-  // const typesList = apiData.map((element) => {
-  //   return { name: element.name };
-  // });
-  // const dbTypes = await Type.bulkCreate(typesList);
-  // res.send(dbTypes);
   const { name } = req.body;
   try {
+    // Solicitud de datos inicial a la API para alimentar la base de datos local.
+    const { count } = await Type.findAndCountAll();
+    if (count === 0) {
+      const apiRequest = await axios("https://pokeapi.co/api/v2/type/");
+      const apiData = apiRequest.data.results;
+      const typesList = apiData.map((element) => {
+        return { name: element.name };
+      });
+      const dbTypes = await Type.bulkCreate(typesList);
+      return res.send(dbTypes);
+    }
+
+    //A partir de aqui maneja las solicitudes post de manera normal
     if (!name) throw new Error("A name for new Pokemon Type is required");
     const newType = await Type.create({ name });
     res.send(newType);
