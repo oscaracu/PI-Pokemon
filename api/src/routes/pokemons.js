@@ -9,10 +9,97 @@ const router = Router();
 // Recibe un nombre por query y devuelve el pokemon con ese nombre, si no,
 // devuelve el listado de pokemons con los datos necesarios para desplegar la ruta principal del client.
 
-router.get("/", (req, res) => {
-  const { name } = req.query;
-  if (name) res.send(`Hola, yo soy ${name}`);
-  else res.send("Hola Pokemon!");
+router.get("/", async (req, res) => {
+  // Se recibe offset y limit por query para limitar la carga de resultados desde la API
+  // El valor por defecto de offset será 0 y de limit 12 para cumplir con el boilerplate
+  const { name, offset, limit } = req.query;
+  // La lista a desplegar se almacenará en el objeto pokemonList
+  // Contendrá las propiedades next y previous ayudar a la paginación del client
+  const pokemonsList = {
+    count: 0,
+    // next: null,
+    // previous: null,
+    results: [],
+  };
+  try {
+    if (name) {
+      const source = await Source.findOne({ where: { name } });
+      if (!source) throw new Error("Pokemon not found");
+      if (!source.url) {
+        const pokemonDetails = await source.getPokemon({ include: [Type] });
+        const currentPokemon = {
+          id: source.id,
+          name: source.name,
+          image: pokemonDetails.image,
+          types: pokemonDetails.types.map((type) => {
+            return { name: type.name };
+          }),
+        };
+
+        return res.send(currentPokemon);
+      } else {
+        const apiResponse = await axios(source.url);
+        const pokemonDetails = apiResponse.data;
+        const currentPokemon = {
+          id: source.id,
+          name: source.name,
+          image: pokemonDetails.sprites.other["official-artwork"].front_default,
+          types: pokemonDetails.types.map((type) => {
+            return { name: type.type.name };
+          }),
+        };
+        return res.send(currentPokemon);
+      }
+    }
+    const { count, rows } = await Source.findAndCountAll({
+      offset: offset ? offset : 0,
+      limit: limit ? limit : 12,
+    });
+    const pokemonsSource = rows;
+    for (const source of pokemonsSource) {
+      if (!source.url) {
+        const pokemonDetails = await source.getPokemon({ include: [Type] });
+        const currentPokemon = {
+          id: source.id,
+          name: source.name,
+          image: pokemonDetails.image,
+          types: pokemonDetails.types.map((type) => {
+            return { name: type.name };
+          }),
+        };
+        pokemonsList.results.push(currentPokemon);
+      } else {
+        const apiResponse = await axios(source.url);
+        const pokemonDetails = apiResponse.data;
+        const currentPokemon = {
+          id: source.id,
+          name: source.name,
+          image: pokemonDetails.sprites.other["official-artwork"].front_default,
+          types: pokemonDetails.types.map((type) => {
+            return { name: type.type.name };
+          }),
+        };
+        // pokemonsList.previous =
+        //   offset === undefined || offset <= 0
+        //     ? pokemonsList.previous
+        //     : `?offset=${parseInt(offset) - parseInt(limit)}&limit=${
+        //         limit === undefined ? 12 : limit
+        //       }`;
+        // pokemonsList.next =
+        //   offset === undefined
+        //     ? `?offset=0&limit=${limit === undefined ? 12 : limit}`
+        //     : `?offset=${parseInt(offset) + parseInt(limit)}&limit=${
+        //         limit === undefined ? 12 : limit
+        //       }`;
+        pokemonsList.count = count;
+        pokemonsList.results.push(currentPokemon);
+      }
+    }
+
+    res.send(pokemonsList);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 // Recibe un id por params y devuelve el detalle de ese pokemon en particular

@@ -43,8 +43,8 @@ const { Pokemon, Type, Source } = sequelize.models;
 // Product.hasMany(Reviews);
 Source.hasOne(Pokemon, { onDelete: "CASCADE" });
 Pokemon.belongsTo(Source);
-Pokemon.belongsToMany(Type, { through: "pokemontypes" });
-Type.belongsToMany(Pokemon, { through: "pokemontypes" });
+Pokemon.belongsToMany(Type, { through: "pokemontypes", timestamps: false });
+Type.belongsToMany(Pokemon, { through: "pokemontypes", timestamps: false });
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
