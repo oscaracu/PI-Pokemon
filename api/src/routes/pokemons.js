@@ -25,6 +25,7 @@ router.get("/", async (req, res) => {
           id: source.id,
           name: source.name,
           image: pokemonDetails.image,
+          attack: pokemonDetails.attack,
           types: pokemonDetails.types.map((type) => {
             return { name: type.name };
           }),
@@ -39,6 +40,7 @@ router.get("/", async (req, res) => {
           id: source.id,
           name: source.name,
           image: pokemonDetails.sprites.other["official-artwork"].front_default,
+          attack: pokemonDetails.stats[1].base_stat,
           types: pokemonDetails.types.map((type) => {
             return { name: type.type.name };
           }),
@@ -99,6 +101,7 @@ router.get("/", async (req, res) => {
           id: source.id,
           name: source.name,
           image: pokemonDetails.image,
+          attack: pokemonDetails.attack,
           types: pokemonDetails.types.map((type) => {
             return { name: type.name };
           }),
@@ -113,6 +116,7 @@ router.get("/", async (req, res) => {
           id: source.id,
           name: source.name,
           image: pokemonDetails.sprites.other["official-artwork"].front_default,
+          attack: pokemonDetails.stats[1].base_stat,
           types: pokemonDetails.types.map((type) => {
             return { name: type.type.name };
           }),
@@ -132,17 +136,24 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
+  console.log(id);
+  console.log(typeof id);
+  console.log(parseInt(id));
   try {
+    if (isNaN(id))
+      throw new Error(
+        "a number is required as a route parameter, for names use a query /?name=something"
+      );
     const dbResponse = await Source.findByPk(parseInt(id));
     if (!dbResponse) throw new Error("Pokemon id not found");
     // Si la response no tiene url se obtienen los detalles de la base de datos local
     if (!dbResponse.url) {
       const pokemonDetails = await dbResponse.getPokemon({ include: Type });
-      const { name, image, hp, attack, defense, speed, height, weight, types } =
+      const { image, hp, attack, defense, speed, height, weight, types } =
         pokemonDetails;
       const currentPokemon = {
         id,
-        name,
+        name: dbResponse.name,
         image,
         hp,
         attack,
@@ -150,7 +161,7 @@ router.get("/:id", async (req, res) => {
         speed,
         height,
         weight,
-        types: pokemonDetails.types.map((type) => {
+        types: types.map((type) => {
           return { name: type.name };
         }),
       };
@@ -161,10 +172,10 @@ router.get("/:id", async (req, res) => {
         `https://pokeapi.co/api/v2/pokemon/${id}`
       );
       const apiData = apiResponse.data;
-      const { name, sprites, stats, height, weight, types } = apiData;
+      const { sprites, stats, height, weight, types } = apiData;
       const currentPokemon = {
         id,
-        name,
+        name: dbResponse.name,
         img: sprites.other["official-artwork"].front_default,
         hp: stats[0].base_stat,
         attack: stats[1].base_stat,
@@ -212,9 +223,10 @@ router.post("/", async (req, res) => {
       height,
       weight,
     };
+    // Aqui se crea un nuevo pokemon en la base de datos
     const dbPokemon = await Pokemon.create(newPokemon);
-    const dbSource = await Source.create({ name });
-    await dbSource.setPokemon(dbPokemon);
+
+    // Aqui asignamos a que tipos de pokemon pertenece
     if (types && types.length > 0) {
       const dbTypes = [];
       for (const type of types) {
@@ -223,9 +235,13 @@ router.post("/", async (req, res) => {
       }
       await dbPokemon.setTypes(dbTypes);
     } else {
+      // Si no se reciben tipos, se asigna el tipo normal por defecto
       const defaultType = await Type.findByPk(1);
       await dbPokemon.setTypes(defaultType);
     }
+    // Si no hay errores finalmente se crea la entrada en el indice y se asocian las tablas
+    const dbSource = await Source.create({ name });
+    await dbSource.setPokemon(dbPokemon);
     res.send(dbSource);
   } catch (error) {
     res.status(400).send({ error: error.message });
@@ -253,10 +269,13 @@ router.put("/", async (req, res) => {
     if (!id) throw new Error("an id is required");
     if (parseInt(id) < 906)
       throw new Error("modifying an original pokemon is not allowed");
+    // Hacemos la request al indice de la base de datos por id
     const currentSource = await Source.findByPk(parseInt(id));
+    // Si no existe se envía mensaje de error
     if (!currentSource) throw new Error("the requested id does not exist");
+    // Si existe el id se obtienen los detalles asociados al indice
     const currentPokemon = await currentSource.getPokemon();
-    await currentSource.update({ name: newPokemonData.name });
+    // Primero se actualizan los detalles del pokemon y sus tipos
     await currentPokemon.update(newPokemonData);
     if (types && types.length > 0) {
       const dbTypes = [];
@@ -265,6 +284,8 @@ router.put("/", async (req, res) => {
         dbTypes.push(currentType);
       }
       await currentPokemon.setTypes(dbTypes);
+      // Si no hay errores se actualiza el indice
+      await currentSource.update({ name: newPokemonData.name });
     }
     res.send(currentPokemon);
   } catch (error) {

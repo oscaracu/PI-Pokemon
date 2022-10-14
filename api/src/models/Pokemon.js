@@ -8,6 +8,8 @@ module.exports = (sequelize) => {
   sequelize.define(
     "pokemon",
     {
+      // Se agrega name para cumplir con el boilerplate
+      // Sin embargo por cuestiones de normalización se podría omitir.
       name: {
         type: DataTypes.STRING,
         allowNull: false,

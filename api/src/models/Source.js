@@ -16,8 +16,11 @@ module.exports = (sequelize) => {
             "name",
             value
               .split(/[ \-\_]/)
-              .map((word) => `${word.toLowerCase()}`)
-              .join("-")
+              .map(
+                (word) =>
+                  `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}`
+              )
+              .join(" ")
           );
         },
       },
