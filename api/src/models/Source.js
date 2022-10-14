@@ -11,6 +11,15 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        set(value) {
+          this.setDataValue(
+            "name",
+            value
+              .split(/[ \-\_]/)
+              .map((word) => `${word.toLowerCase()}`)
+              .join("-")
+          );
+        },
       },
       url: {
         type: DataTypes.STRING,
