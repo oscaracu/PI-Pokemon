@@ -130,9 +130,57 @@ router.get("/", async (req, res) => {
 
 // Recibe un id por params y devuelve el detalle de ese pokemon en particular
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  res.send({ message: `Soy el pokemon ${id}` });
+  try {
+    const dbResponse = await Source.findByPk(parseInt(id));
+    if (!dbResponse) throw new Error("Pokemon id not found");
+    // Si la response no tiene url se obtienen los detalles de la base de datos local
+    if (!dbResponse.url) {
+      const pokemonDetails = await dbResponse.getPokemon({ include: Type });
+      const { name, image, hp, attack, defense, speed, height, weight, types } =
+        pokemonDetails;
+      const currentPokemon = {
+        id,
+        name,
+        image,
+        hp,
+        attack,
+        defense,
+        speed,
+        height,
+        weight,
+        types: pokemonDetails.types.map((type) => {
+          return { name: type.name };
+        }),
+      };
+      return res.send(currentPokemon);
+    } else {
+      //Si la response tiene url, se obtienen los detalles por request a la API pokemon externa
+      const apiResponse = await axios(
+        `https://pokeapi.co/api/v2/pokemon/${id}`
+      );
+      const apiData = apiResponse.data;
+      const { name, sprites, stats, height, weight, types } = apiData;
+      const currentPokemon = {
+        id,
+        name,
+        img: sprites.other["official-artwork"].front_default,
+        hp: stats[0].base_stat,
+        attack: stats[1].base_stat,
+        defense: stats[2].base_stat,
+        speed: stats[5].base_stat,
+        height,
+        weight,
+        types: types.map((type) => {
+          return { name: type.type.name };
+        }),
+      };
+      res.send(currentPokemon);
+    }
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 });
 
 // POST route
