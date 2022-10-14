@@ -124,7 +124,7 @@ router.get("/", async (req, res) => {
 
     res.send(pokemonsList);
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send({ error: error.message });
   }
 });
 
@@ -132,7 +132,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
-  res.send(`Soy el pokemon ${id}`);
+  res.send({ message: `Soy el pokemon ${id}` });
 });
 
 // POST route
@@ -164,8 +164,8 @@ router.post("/", async (req, res) => {
       height,
       weight,
     };
-    const dbSource = await Source.create({ name });
     const dbPokemon = await Pokemon.create(newPokemon);
+    const dbSource = await Source.create({ name });
     await dbSource.setPokemon(dbPokemon);
     if (types && types.length > 0) {
       const dbTypes = [];
@@ -180,7 +180,7 @@ router.post("/", async (req, res) => {
     }
     res.send(dbSource);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ error: error.message });
   }
 });
 
@@ -220,7 +220,7 @@ router.put("/", async (req, res) => {
     }
     res.send(currentPokemon);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ error: error.message });
   }
 });
 
@@ -237,9 +237,9 @@ router.delete("/", async (req, res) => {
     const currentSource = await Source.findByPk(parseInt(id));
     if (!currentSource) throw new Error("the requested id does not exist");
     await currentSource.destroy();
-    res.send("Pokemon successfully eliminated");
+    res.send({ message: "Pokemon successfully eliminated" });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ error: error.message });
   }
 });
 
