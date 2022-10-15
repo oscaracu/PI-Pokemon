@@ -35,7 +35,6 @@ module.exports = (sequelize) => {
       },
       image: {
         type: DataTypes.STRING,
-        defaultValue: "default.png",
       },
       hp: {
         type: DataTypes.INTEGER,

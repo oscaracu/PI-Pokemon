@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const routes = require("./routes/index.js");
+const fileUpload = require("express-fileupload");
 
 require("./db.js");
 
@@ -13,6 +14,7 @@ server.name = "API";
 // Middlewares agregados por mi
 
 server.use(express.static("./src/public"));
+server.use(fileUpload());
 
 // Middlewares suministrados por Henry
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));

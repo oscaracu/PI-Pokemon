@@ -4,6 +4,10 @@ const axios = require("axios");
 
 const router = Router();
 
+// Variables globales
+
+const store = { currentImg: null, currentFilename: null };
+
 // GET routes
 
 // Recibe un nombre por query y devuelve el pokemon con ese nombre, si no,
@@ -11,6 +15,8 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   const { name, offset, limit } = req.query;
+  // Almacenamos la url base en una constante
+  const currentUrl = `http://${req.hostname}:3001${req.baseUrl}/`;
 
   try {
     // En esta seccion se procesan los request por query name
@@ -73,13 +79,13 @@ router.get("/", async (req, res) => {
         paginationAux.currentOffset > count ||
         paginationAux.currentOffset + paginationAux.currentLimit > count
           ? null
-          : `?offset=${
+          : `${currentUrl}?offset=${
               paginationAux.currentOffset + paginationAux.currentLimit
             }&limit=${paginationAux.currentLimit}`,
       previous:
         paginationAux.currentOffset === 0
           ? null
-          : `?offset=${
+          : `${currentUrl}?offset=${
               currentDif < 0
                 ? 0
                 : paginationAux.currentOffset - paginationAux.currentLimit
@@ -136,9 +142,6 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  console.log(typeof id);
-  console.log(parseInt(id));
   try {
     if (isNaN(id))
       throw new Error(
@@ -197,6 +200,7 @@ router.get("/:id", async (req, res) => {
 // POST route
 
 router.post("/", async (req, res) => {
+  const imagesUrl = `http://${req.hostname}:3001/images/`;
   const { name, image, hp, attack, defense, speed, height, weight, types } =
     req.body;
   try {
@@ -213,9 +217,26 @@ router.post("/", async (req, res) => {
 
     // A partir de aqui maneja las solicitudes post de forma normal
     if (!name) throw new Error("a name is required");
+    // Si hay un arhivo de imagen precargado se almacena y se crea el nombre de archivo
+    if (store.currentImg) {
+      const fileExt = store.currentImg.name.split(".").pop();
+      const fileName = name
+        .split(/[ \-\_]/)
+        .map((word) => `${word.toLowerCase()}`)
+        .join("_");
+      await store.currentImg.mv(
+        `./src/public/images/${fileName}.${fileExt}`,
+        (err) => {
+          if (err) throw new Error("image file upload failed");
+        }
+      );
+      store.currentFilename = `${fileName}.${fileExt}`;
+    }
     const newPokemon = {
       name,
-      image,
+      image: store.currentImg
+        ? `${imagesUrl}${store.currentFilename}`
+        : `${imagesUrl}default.png`,
       hp,
       attack,
       defense,
@@ -239,10 +260,31 @@ router.post("/", async (req, res) => {
       const defaultType = await Type.findByPk(1);
       await dbPokemon.setTypes(defaultType);
     }
+
     // Si no hay errores finalmente se crea la entrada en el indice y se asocian las tablas
     const dbSource = await Source.create({ name });
     await dbSource.setPokemon(dbPokemon);
+    // Limpiamos la store
+    store.currentImg = null;
+    store.currentFilename = null;
     res.send(dbSource);
+  } catch (error) {
+    if (error.message === "image file upload failed") {
+      return res.status(500).send({ error: error.message });
+    }
+    res.status(400).send({ error: error.message });
+  }
+});
+
+// Recibe un archivo y lo almacena en memoria
+
+router.post("/upload", async (req, res) => {
+  try {
+    if (!req.files || Object.keys(req.files).length === 0)
+      throw new Error("No files were uploaded.");
+    store.currentImg = req.files.img;
+
+    res.send({ message: "the file has been preloaded successfully" });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
