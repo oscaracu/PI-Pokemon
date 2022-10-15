@@ -14,7 +14,7 @@ const store = { currentImg: null, currentFilename: null };
 // devuelve el listado de pokemons con los datos necesarios para desplegar la ruta principal del client.
 
 router.get("/", async (req, res) => {
-  const { name, offset, limit } = req.query;
+  const { name, offset, limit, order, attribute, type } = req.query;
   // Almacenamos la url base en una constante
   const currentUrl = `http://${req.hostname}:3001${req.baseUrl}/`;
 
@@ -72,6 +72,7 @@ router.get("/", async (req, res) => {
     const { count, rows } = await Source.findAndCountAll({
       offset: offset ? offset : 0,
       limit: limit ? limit : 12,
+      order: [[attribute ? attribute : "id", order ? order : "ASC"]],
     });
     const pokemonsList = {
       count: count,
