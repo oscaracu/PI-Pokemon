@@ -11,6 +11,12 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        validate: {
+          notNums(value) {
+            if (!/^[a-zA-Z \-]+$/.test(value))
+              throw new Error("The name should not have numbers");
+          },
+        },
         set(value) {
           this.setDataValue(
             "name",
@@ -27,7 +33,27 @@ module.exports = (sequelize) => {
       url: {
         type: DataTypes.STRING,
       },
+      image: {
+        type: DataTypes.STRING,
+      },
+      attack: {
+        type: DataTypes.INTEGER,
+        defaultValue: 10,
+        validate: {
+          intGTZ(value) {
+            if (!/^([1-9][0-9]+|[1-9])$/.test(value))
+              throw new Error("attack " + ERR_MSG_GTZ);
+          },
+        },
+      },
     },
-    { timestamps: false }
+    {
+      timestamps: false,
+      indexes: [
+        {
+          fields: ["name"],
+        },
+      ],
+    }
   );
 };

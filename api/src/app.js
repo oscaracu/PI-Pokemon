@@ -14,7 +14,12 @@ server.name = "API";
 // Middlewares agregados por mi
 
 server.use(express.static("./src/public"));
-server.use(fileUpload());
+server.use(
+  fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+    abortOnLimit: true,
+  })
+);
 
 // Middlewares suministrados por Henry
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));

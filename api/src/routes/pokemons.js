@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
   const currentUrl = `http://${req.hostname}:3001${req.baseUrl}/`;
 
   try {
-    // En esta seccion se procesan los request por query name
+    // En esta seccion se procesan los request por query
 
     if (name) {
       const source = await Source.findOne({ where: { name } });
@@ -72,6 +72,7 @@ router.get("/", async (req, res) => {
     const { count, rows } = await Source.findAndCountAll({
       offset: offset ? offset : 0,
       limit: limit ? limit : 12,
+      // Tambien se recibe attribute y order por query para manejar el ordenamiento de la lista
       order: [[attribute ? attribute : "id", order ? order : "ASC"]],
     });
     const pokemonsList = {
