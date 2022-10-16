@@ -51,7 +51,7 @@ module.exports = (sequelize) => {
       timestamps: false,
       indexes: [
         {
-          fields: ["name"],
+          fields: ["name", "attack"],
         },
       ],
     }

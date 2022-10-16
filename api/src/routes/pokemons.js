@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const { Pokemon, Source, Type } = require("../db");
 const axios = require("axios");
+const fs = require("fs");
 
 const router = Router();
 
@@ -203,21 +204,59 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const imagesUrl = `http://${req.hostname}:3001/images/`;
-  const { name, image, hp, attack, defense, speed, height, weight, types } =
-    req.body;
+  const { name, hp, attack, defense, speed, height, weight, types } = req.body;
   try {
+    /////////////////////////////////////////////////////////////////////////////////////
     // Solicitud inicial a la API pokemon para crear un índice en la base de datos local
+    /////////////////////////////////////////////////////////////////////////////////////
     const { count } = await Source.findAndCountAll();
     if (count === 0) {
-      const apiRequest = await axios(
-        "https://pokeapi.co/api/v2/pokemon/?limit=905"
-      );
-      const pokemonList = apiRequest.data.results;
-      const dbIndex = await Source.bulkCreate(pokemonList);
-      return res.send(dbIndex);
-    }
+      // Version 1
+      // const apiRequest = await axios(
+      //   "https://pokeapi.co/api/v2/pokemon/?limit=905"
+      // );
+      // const pokemonList = apiRequest.data.results;
+      // const dbIndex = await Source.bulkCreate(pokemonList);
+      // return res.send(dbIndex);
 
+      // Version 2
+      // Hacemos request a la API Pokemon externa
+      const apiRequest = await axios(
+        "https://pokeapi.co/api/v2/pokemon/?limit=10"
+      );
+      // Almacenamos la response en una variable
+      const sourceList = apiRequest.data.results;
+      // Iteramos sobre la response para armar un objeto Pokemon
+      for (const pokemon of sourceList) {
+        const currentPokemon = {};
+        // De la url obtenida en la primera request hacemos una nueva para obtener detalles
+        const newRequest = await axios(pokemon.url);
+        const data = newRequest.data;
+        currentPokemon.name = data.name;
+        currentPokemon.url = pokemon.url;
+        currentPokemon.image =
+          data.sprites.other["official-artwork"].front_default;
+        currentPokemon.attack = data.stats[1].base_stat;
+        // Creamos una nueva referencia a la API en nuestra base de datos con los datos que necesitamos para el front
+        const currentSource = await Source.create(currentPokemon);
+        // Obtenemos los tipos de pokemon del elemento actual
+        const typesList = [];
+        for (const type of data.types) {
+          const typeSplit = type.type.url.split("/");
+          const typeId = typeSplit[typeSplit.length - 2];
+          typesList.push(parseInt(typeId));
+        }
+        // Asociamos los tipos a nuestra referencia
+        await currentSource.setTypes(typesList);
+      }
+
+      const resultsList = await Source.findAll({ include: Type });
+
+      return res.send(resultsList);
+    }
+    ///////////////////////////////////////////////////////////////
     // A partir de aqui maneja las solicitudes post de forma normal
+    ///////////////////////////////////////////////////////////////
     if (!name) throw new Error("a name is required");
     // Si hay un arhivo de imagen precargado se almacena y se crea el nombre de archivo
     if (store.currentImg) {
@@ -234,6 +273,7 @@ router.post("/", async (req, res) => {
       );
       store.currentFilename = `${fileName}.${fileExt}`;
     }
+    // Se arma un objeto con los datos del nuevo Pokemon
     const newPokemon = {
       name,
       image: store.currentImg
@@ -249,27 +289,39 @@ router.post("/", async (req, res) => {
     // Aqui se crea un nuevo pokemon en la base de datos
     const dbPokemon = await Pokemon.create(newPokemon);
 
+    // Si no hay errores se crea la entrada en source y se asocia a los detalles
+    const dbSource = await Source.create({
+      name,
+      image: store.currentImg
+        ? `${imagesUrl}${store.currentFilename}`
+        : `${imagesUrl}default.png`,
+      attack,
+    });
+    await dbSource.setPokemon(dbPokemon);
+
     // Aqui asignamos a que tipos de pokemon pertenece
+    const dbTypes = [];
     if (types && types.length > 0) {
-      const dbTypes = [];
       for (const type of types) {
-        const currentType = await Type.findByPk(parseInt(type.id));
+        const currentType = await Type.findByPk(parseInt(type));
         dbTypes.push(currentType);
       }
-      await dbPokemon.setTypes(dbTypes);
+      await dbSource.setTypes(dbTypes);
     } else {
       // Si no se reciben tipos, se asigna el tipo normal por defecto
       const defaultType = await Type.findByPk(1);
-      await dbPokemon.setTypes(defaultType);
+      await dbSource.setTypes(defaultType);
     }
 
-    // Si no hay errores finalmente se crea la entrada en el indice y se asocian las tablas
-    const dbSource = await Source.create({ name });
-    await dbSource.setPokemon(dbPokemon);
     // Limpiamos la store
     store.currentImg = null;
     store.currentFilename = null;
-    res.send(dbSource);
+
+    // Recuperamos la referencia recien creada y la enviamos como response
+    const currentId = dbSource.id;
+    const currentSource = await Source.findByPk(currentId, { include: Type });
+
+    res.send(currentSource);
   } catch (error) {
     if (error.message === "image file upload failed") {
       return res.status(500).send({ error: error.message });
@@ -297,21 +349,16 @@ router.post("/upload", async (req, res) => {
 //Si el id pertenece a un pokemon original envía un mensaje de error
 
 router.put("/", async (req, res) => {
-  const { id, name, image, hp, attack, defense, speed, height, weight, types } =
+  // Definimos una ruta para las imagenes
+  const imagesUrl = `http://${req.hostname}:3001/images/`;
+
+  // Almacenamos en variables los datos pasados por body
+  const { id, name, hp, attack, defense, speed, height, weight, types } =
     req.body;
-  const newPokemonData = {
-    name,
-    image,
-    hp,
-    attack,
-    defense,
-    speed,
-    height,
-    weight,
-  };
+
   try {
     if (!id) throw new Error("an id is required");
-    if (parseInt(id) < 906)
+    if (parseInt(id) < 11)
       throw new Error("modifying an original pokemon is not allowed");
     // Hacemos la request al indice de la base de datos por id
     const currentSource = await Source.findByPk(parseInt(id));
@@ -319,19 +366,84 @@ router.put("/", async (req, res) => {
     if (!currentSource) throw new Error("the requested id does not exist");
     // Si existe el id se obtienen los detalles asociados al indice
     const currentPokemon = await currentSource.getPokemon();
-    // Primero se actualizan los detalles del pokemon y sus tipos
+    // Si hay un arhivo de imagen precargado se almacena y se crea el nombre de archivo
+    if (store.currentImg) {
+      const fileExt = store.currentImg.name.split(".").pop();
+      // Antes de actualizar la imagen se obtienen los datos del objeto anterior
+      const oldPokemonData = currentSource;
+      const oldFileName = oldPokemonData.image.split("/").pop();
+      const oldImagePath = `./src/public/images/${oldFileName}`;
+      const oldName = oldPokemonData.name;
+      if (!name) {
+        //Si se carga un archivo nuevo pero no se recibe name, se usa el name anterior
+        const fileName = oldName
+          .split(/[ \-\_]/)
+          .map((word) => `${word.toLowerCase()}`)
+          .join("_");
+        await store.currentImg.mv(
+          `./src/public/images/${fileName}.${fileExt}`,
+          (err) => {
+            if (err) throw new Error("image file upload failed");
+          }
+        );
+        store.currentFilename = `${fileName}.${fileExt}`;
+      } else {
+        // Si se manda un nombre nuevo se usa para dar nombre al archivo de imagen nuevo
+        const fileName = name
+          .split(/[ \-\_]/)
+          .map((word) => `${word.toLowerCase()}`)
+          .join("_");
+        await store.currentImg.mv(
+          `./src/public/images/${fileName}.${fileExt}`,
+          (err) => {
+            if (err) throw new Error("image file upload failed");
+          }
+        );
+        store.currentFilename = `${fileName}.${fileExt}`;
+        if (oldFileName !== "default.png") {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+    }
+    // Creamos un objeto con los datos a modificar del pokemon
+    const newPokemonData = {
+      name,
+      image: store.currentImg
+        ? `${imagesUrl}${store.currentFilename}`
+        : `${imagesUrl}default.png`,
+      hp,
+      attack,
+      defense,
+      speed,
+      height,
+      weight,
+    };
+    // Primero se actualizan los detalles del pokemon
     await currentPokemon.update(newPokemonData);
+    // Si no hay errores se actualiza la referencia
+    await currentSource.update({
+      name: newPokemonData.name,
+      image: newPokemonData.image,
+      attack: newPokemonData.attack,
+    });
+    // Si recibimos tipos de pokemon, se actualizan
     if (types && types.length > 0) {
       const dbTypes = [];
       for (const type of types) {
-        const currentType = await Type.findByPk(parseInt(type.id));
+        const currentType = await Type.findByPk(parseInt(type));
         dbTypes.push(currentType);
       }
-      await currentPokemon.setTypes(dbTypes);
-      // Si no hay errores se actualiza el indice
-      await currentSource.update({ name: newPokemonData.name });
+      await currentSource.setTypes(dbTypes);
     }
-    res.send(currentPokemon);
+
+    // Limpiamos la store
+    store.currentImg = null;
+    store.currentFilename = null;
+
+    // Recuperamos la referencia recien creada y la enviamos como response
+    const updatedSource = await Source.findByPk(id, { include: Type });
+
+    res.send(updatedSource);
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
@@ -345,10 +457,11 @@ router.delete("/", async (req, res) => {
   const { id } = req.body;
   try {
     if (!id) throw new Error("an id is required");
-    if (parseInt(id) < 906)
+    if (parseInt(id) < 11)
       throw new Error("deleting an original pokemon is not allowed");
     const currentSource = await Source.findByPk(parseInt(id));
     if (!currentSource) throw new Error("the requested id does not exist");
+
     await currentSource.destroy();
     res.send({ message: "Pokemon successfully eliminated" });
   } catch (error) {
