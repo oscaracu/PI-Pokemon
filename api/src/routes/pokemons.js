@@ -9,51 +9,98 @@ const router = Router();
 
 const store = { currentImg: null, currentFilename: null };
 
+/////////////
 // GET routes
+/////////////
 
 // Recibe un nombre por query y devuelve el pokemon con ese nombre, si no,
 // devuelve el listado de pokemons con los datos necesarios para desplegar la ruta principal del client.
 
 router.get("/", async (req, res) => {
-  const { name, offset, limit, order, attribute, type } = req.query;
+  const { name, offset, limit, order, orderBy, type } = req.query;
   // Almacenamos la url base en una constante
   const currentUrl = `http://${req.hostname}:3001${req.baseUrl}/`;
 
   try {
     // En esta seccion se procesan los request por query
 
-    if (name) {
-      const source = await Source.findOne({ where: { name } });
-      if (!source) throw new Error("Pokemon not found");
-      // Si el elemento encontrado no tiene una url se hace una consulta a la base de datos
-      if (!source.url) {
-        const pokemonDetails = await source.getPokemon({ include: [Type] });
-        const currentPokemon = {
-          id: source.id,
-          name: source.name,
-          image: pokemonDetails.image,
-          attack: pokemonDetails.attack,
-          types: pokemonDetails.types.map((type) => {
-            return { name: type.name };
-          }),
-        };
+    ////////////////////
+    // Version 1 (Lenta)
+    ////////////////////
+    // Obtiene los datos de portada desde la API externa o base de datos segun corresponda
 
-        return res.send(currentPokemon);
-      } else {
-        // Si el elemento si tiene una url se hace una request a la API externa
-        const apiResponse = await axios(source.url);
-        const pokemonDetails = apiResponse.data;
-        const currentPokemon = {
-          id: source.id,
-          name: source.name,
-          image: pokemonDetails.sprites.other["official-artwork"].front_default,
-          attack: pokemonDetails.stats[1].base_stat,
-          types: pokemonDetails.types.map((type) => {
-            return { name: type.type.name };
-          }),
-        };
-        return res.send(currentPokemon);
-      }
+    // if (name) {
+    //   const parsedName = name
+    //     .split(/[ \-\_]/)
+    //     .map((word) => `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}`)
+    //     .join(" ");
+    //   const source = await Source.findOne({
+    //     where: { name: parsedName },
+    //     include: Type,
+    //   });
+    //   if (!source) throw new Error("Pokemon not found");
+    //   // Si el elemento encontrado no tiene una url se hace una consulta a la base de datos
+    //   if (!source.url) {
+    //     const pokemonDetails = await source.getPokemon();
+    //     const currentPokemon = {
+    //       id: source.id,
+    //       name: source.name,
+    //       image: pokemonDetails.image,
+    //       attack: pokemonDetails.attack,
+    //       types: source.types.map((type) => {
+    //         return { name: type.name };
+    //       }),
+    //     };
+
+    //     return res.send(currentPokemon);
+    //   } else {
+    //     // Si el elemento si tiene una url se hace una request a la API externa
+    //     const apiResponse = await axios(source.url);
+    //     const pokemonDetails = apiResponse.data;
+    //     const currentPokemon = {
+    //       id: source.id,
+    //       name: source.name,
+    //       image: pokemonDetails.sprites.other["official-artwork"].front_default,
+    //       attack: pokemonDetails.stats[1].base_stat,
+    //       types: pokemonDetails.types.map((type) => {
+    //         return { name: type.type.name };
+    //       }),
+    //     };
+    //     return res.send(currentPokemon);
+    //   }
+    // }
+
+    ////////////////////
+    // Version 2
+    /////////////////
+    // Usamos la lista cache Source y sus datos integrados para mostrar el resultado
+
+    //Si hay un name por query se muestra solo al Pokemon que corresponda al nombre
+    if (name) {
+      //Antes de hacer la consulta a la base de datos se transforma el string recibido para que mache con el formato que contiene la base de datos
+      const parsedName = name
+        .split(/[ \-\_]/)
+        .map((word) => `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}`)
+        .join(" ");
+      //Se ejecuta la consulta
+      const source = await Source.findOne({
+        where: { name: parsedName },
+        include: Type,
+      });
+      // Si no se encuentran resultados se devuelve un error
+      if (!source) throw new Error("Pokemon not found");
+      // Si el proceso continua creamos un objeto con el modelo que será enviado por response
+      const currentPokemon = {
+        id: source.id,
+        name: source.name,
+        image: source.image,
+        attack: source.attack,
+        types: source.types.map((type) => {
+          return { name: type.name };
+        }),
+      };
+      // Se envía el resultado por response
+      return res.send(currentPokemon);
     }
 
     // A partir de aqui manejamos el request que lista todos los pokemons cuando no se recibe nombre por query
@@ -71,10 +118,11 @@ router.get("/", async (req, res) => {
     // El valor por defecto de offset será 0 y de limit 12 para cumplir con la paginacion solicitada en el boilerplate
 
     const { count, rows } = await Source.findAndCountAll({
+      include: [Type],
       offset: offset ? offset : 0,
       limit: limit ? limit : 12,
       // Tambien se recibe attribute y order por query para manejar el ordenamiento de la lista
-      order: [[attribute ? attribute : "id", order ? order : "ASC"]],
+      order: [[orderBy ? orderBy : "id", order ? order : "ASC"]],
     });
     const pokemonsList = {
       count: count,
@@ -99,40 +147,66 @@ router.get("/", async (req, res) => {
             }`,
       results: [],
     };
+
     // Rows contiene un array con los elementos obtenidos con findAndCountAll
     const pokemonsSource = rows;
+
+    ///////////////////
+    // Version 1 (Lenta)
+    ///////////////////
+    //  Iteramos sobre la lista cache Source y solicitamos los datos a la API externa o Base de datos segun corresponda
+
+    // for (const source of pokemonsSource) {
+
+    // Si el elemento encontrado no tiene una url se hace una consulta a la base de datos
+
+    // if (!source.url) {
+    //   const pokemonDetails = await source.getPokemon();
+    //   const currentPokemon = {
+    //     id: source.id,
+    //     name: pokemonDetails.name,
+    //     image: pokemonDetails.image,
+    //     attack: pokemonDetails.attack,
+    //     types: source.types.map((type) => {
+    //       return { name: type.name };
+    //     }),
+    //   };
+    //   pokemonsList.results.push(currentPokemon);
+    // } else {
+    //   // Si el elemento si tiene una url se hace una request a la API externa
+
+    //   const apiResponse = await axios(source.url);
+    //   const pokemonDetails = apiResponse.data;
+    //   const currentPokemon = {
+    //     id: source.id,
+    //     name: source.name,
+    //     image: pokemonDetails.sprites.other["official-artwork"].front_default,
+    //     attack: pokemonDetails.stats[1].base_stat,
+    //     types: pokemonDetails.types.map((type) => {
+    //       return { name: type.type.name };
+    //     }),
+    //   };
+    //   // Almacenamos los resultados
+    //   pokemonsList.results.push(currentPokemon);
+    // }
+
+    // }
+    /////////////////////
+    // Version 2 (Rapida)
+    /////////////////////
+    // Iteramos sobre la lista cache Source almacenada e indexada en la base de datos y que ya contiene los datos necesarios y limpiamos el formato de salida
+
     for (const source of pokemonsSource) {
-      // Si el elemento encontrado no tiene una url se hace una consulta a la base de datos
-
-      if (!source.url) {
-        const pokemonDetails = await source.getPokemon({ include: [Type] });
-        const currentPokemon = {
-          id: source.id,
-          name: source.name,
-          image: pokemonDetails.image,
-          attack: pokemonDetails.attack,
-          types: pokemonDetails.types.map((type) => {
-            return { name: type.name };
-          }),
-        };
-        pokemonsList.results.push(currentPokemon);
-      } else {
-        // Si el elemento si tiene una url se hace una request a la API externa
-
-        const apiResponse = await axios(source.url);
-        const pokemonDetails = apiResponse.data;
-        const currentPokemon = {
-          id: source.id,
-          name: source.name,
-          image: pokemonDetails.sprites.other["official-artwork"].front_default,
-          attack: pokemonDetails.stats[1].base_stat,
-          types: pokemonDetails.types.map((type) => {
-            return { name: type.type.name };
-          }),
-        };
-        // Almacenamos los resultados
-        pokemonsList.results.push(currentPokemon);
-      }
+      const currentPokemon = {
+        id: source.id,
+        name: source.name,
+        image: source.image,
+        attack: source.attack,
+        types: source.types.map((type) => {
+          return { name: type.name };
+        }),
+      };
+      pokemonsList.results.push(currentPokemon);
     }
 
     res.send(pokemonsList);
@@ -150,16 +224,16 @@ router.get("/:id", async (req, res) => {
       throw new Error(
         "a number is required as a route parameter, for names use a query /?name=something"
       );
-    const dbResponse = await Source.findByPk(parseInt(id));
+    const dbResponse = await Source.findByPk(parseInt(id), { include: Type });
     if (!dbResponse) throw new Error("Pokemon id not found");
     // Si la response no tiene url se obtienen los detalles de la base de datos local
     if (!dbResponse.url) {
-      const pokemonDetails = await dbResponse.getPokemon({ include: Type });
-      const { image, hp, attack, defense, speed, height, weight, types } =
+      const pokemonDetails = await dbResponse.getPokemon();
+      const { name, image, hp, attack, defense, speed, height, weight } =
         pokemonDetails;
       const currentPokemon = {
         id,
-        name: dbResponse.name,
+        name,
         image,
         hp,
         attack,
@@ -167,7 +241,7 @@ router.get("/:id", async (req, res) => {
         speed,
         height,
         weight,
-        types: types.map((type) => {
+        types: dbResponse.types.map((type) => {
           return { name: type.name };
         }),
       };
@@ -182,7 +256,7 @@ router.get("/:id", async (req, res) => {
       const currentPokemon = {
         id,
         name: dbResponse.name,
-        img: sprites.other["official-artwork"].front_default,
+        image: sprites.other["official-artwork"].front_default,
         hp: stats[0].base_stat,
         attack: stats[1].base_stat,
         defense: stats[2].base_stat,
@@ -200,7 +274,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+/////////////
 // POST route
+/////////////
 
 router.post("/", async (req, res) => {
   const imagesUrl = `http://${req.hostname}:3001/images/`;
@@ -330,7 +406,9 @@ router.post("/", async (req, res) => {
   }
 });
 
+/////////////////////////////////////////////
 // Recibe un archivo y lo almacena en memoria
+//////////////////////////////////////////////
 
 router.post("/upload", async (req, res) => {
   try {
@@ -344,7 +422,10 @@ router.post("/upload", async (req, res) => {
   }
 });
 
+////////////
 // PUT route
+////////////
+
 // Modifica un pokemon existente en la base de datos.
 //Si el id pertenece a un pokemon original envía un mensaje de error
 
@@ -449,7 +530,9 @@ router.put("/", async (req, res) => {
   }
 });
 
+///////////////
 // DELETE route
+///////////////
 // Borra un pokemon de la base de datos.
 // Si el id pertenece a un pokemon original envía un error.
 
