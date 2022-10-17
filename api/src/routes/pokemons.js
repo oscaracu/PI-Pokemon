@@ -18,7 +18,7 @@ const store = { currentImg: null, currentFilename: null };
 // devuelve el listado de pokemons con los datos necesarios para desplegar la ruta principal del client.
 
 router.get("/", async (req, res) => {
-  const { name, offset, limit, order, orderBy, type } = req.query;
+  const { name, offset, limit, order, orderBy, type, source } = req.query;
   // Almacenamos la url base en una constante
   const currentUrl = `http://${req.hostname}:3001${req.baseUrl}/`;
 
@@ -86,19 +86,19 @@ router.get("/", async (req, res) => {
         .map((word) => `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}`)
         .join(" ");
       //Se ejecuta la consulta
-      const source = await Source.findOne({
+      const data = await Source.findOne({
         where: { name: parsedName },
         include: Type,
       });
       // Si no se encuentran resultados se devuelve un error
-      if (!source) throw new Error("Pokemon not found");
+      if (!data) throw new Error("Pokemon not found");
       // Si el proceso continua creamos un objeto con el modelo que será enviado por response
       const currentPokemon = {
-        id: source.id,
-        name: source.name,
-        image: source.image,
-        attack: source.attack,
-        types: source.types.map((type) => {
+        id: data.id,
+        name: data.name,
+        image: data.image,
+        attack: data.attack,
+        types: data.types.map((type) => {
           return { name: type.name };
         }),
       };
@@ -120,7 +120,23 @@ router.get("/", async (req, res) => {
     // Se recibe offset y limit por query para limitar la carga de resultados desde la API
     // El valor por defecto de offset será 0 y de limit 12 para cumplir con la paginacion solicitada en el boilerplate
 
+    let sourceFilter;
+    if (source) {
+      switch (source) {
+        case "db":
+          sourceFilter = { url: { [Op.is]: null } };
+          break;
+        case "api":
+          sourceFilter = { url: { [Op.not]: null } };
+          break;
+
+        default:
+          break;
+      }
+    }
+
     const { count, rows } = await Source.findAndCountAll({
+      where: source ? sourceFilter : {},
       include: {
         model: Type,
         where: type ? { id: type } : {},
