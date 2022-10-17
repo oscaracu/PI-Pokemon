@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { Pokemon, Source, Type } = require("../db");
 const axios = require("axios");
 const fs = require("fs");
+const { Op } = require("sequelize");
 
 const router = Router();
 
@@ -75,7 +76,9 @@ router.get("/", async (req, res) => {
     /////////////////
     // Usamos la lista cache Source y sus datos integrados para mostrar el resultado
 
+    ///////////////////////////////////////////////////////////////////////////////
     //Si hay un name por query se muestra solo al Pokemon que corresponda al nombre
+    ///////////////////////////////////////////////////////////////////////////////
     if (name) {
       //Antes de hacer la consulta a la base de datos se transforma el string recibido para que mache con el formato que contiene la base de datos
       const parsedName = name
@@ -118,7 +121,10 @@ router.get("/", async (req, res) => {
     // El valor por defecto de offset será 0 y de limit 12 para cumplir con la paginacion solicitada en el boilerplate
 
     const { count, rows } = await Source.findAndCountAll({
-      include: [Type],
+      include: {
+        model: Type,
+        where: type ? { id: type } : {},
+      },
       offset: offset ? offset : 0,
       limit: limit ? limit : 12,
       // Tambien se recibe attribute y order por query para manejar el ordenamiento de la lista
@@ -215,7 +221,9 @@ router.get("/", async (req, res) => {
   }
 });
 
+/////////////////////////////////////////////////////////////////////////////
 // Recibe un id por params y devuelve el detalle de ese pokemon en particular
+/////////////////////////////////////////////////////////////////////////////
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
