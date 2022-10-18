@@ -1,9 +1,9 @@
 const Footer = (props) => {
   return (
     <>
-      <Footer>
+      <footer>
         <div>Hecho con cariño por Oscar Cu para SoyHenry</div>
-      </Footer>
+      </footer>
     </>
   );
 };

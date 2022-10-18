@@ -1,5 +1,11 @@
+import Pokemons from "../Pokemons/Pokemons";
+
 const Home = (props) => {
-  return <></>;
+  return (
+    <>
+      <Pokemons />
+    </>
+  );
 };
 
 export default Home;
