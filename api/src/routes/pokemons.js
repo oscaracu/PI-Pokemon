@@ -225,7 +225,7 @@ router.get("/", async (req, res) => {
         image: source.image,
         attack: source.attack,
         types: source.types.map((type) => {
-          return { name: type.name };
+          return { id: type.id, name: type.name };
         }),
       };
       pokemonsList.results.push(currentPokemon);

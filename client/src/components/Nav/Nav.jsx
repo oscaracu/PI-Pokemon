@@ -7,6 +7,7 @@ const Nav = (props) => {
           <ul>
             <li>Home</li>
             <li>About</li>
+            <li>Pokemons</li>
             <li>Create Pokemon</li>
           </ul>
           <div>
