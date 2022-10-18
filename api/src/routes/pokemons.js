@@ -154,7 +154,11 @@ router.get("/", async (req, res) => {
           ? null
           : `${currentUrl}?offset=${
               paginationAux.currentOffset + paginationAux.currentLimit
-            }&limit=${paginationAux.currentLimit}`,
+            }&limit=${paginationAux.currentLimit}${
+              orderBy ? `&orderBy=${orderBy}` : ""
+            }${order ? `&order=${order}` : ""}${type ? `&type=${type}` : ""}${
+              source ? `&source=${source}` : ""
+            }`,
       previous:
         paginationAux.currentOffset === 0
           ? null
@@ -166,6 +170,10 @@ router.get("/", async (req, res) => {
               currentDif < 0
                 ? paginationAux.currentLimit + currentDif
                 : paginationAux.currentLimit
+            }${orderBy ? `&orderBy=${orderBy}` : ""}${
+              order ? `&order=${order}` : ""
+            }${type ? `&type=${type}` : ""}${
+              source ? `&source=${source}` : ""
             }`,
       results: [],
     };

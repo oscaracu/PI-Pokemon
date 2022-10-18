@@ -5,6 +5,7 @@ const initialState = {
   prev: null,
   next: null,
   pokemon: {},
+  count: 0,
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -15,6 +16,7 @@ const rootReducer = (state = initialState, action) => {
         pokemons: action.payload.results,
         prev: action.payload.previous,
         next: action.payload.next,
+        count: action.payload.count,
       };
     case PREV_OR_NEXT:
       return {
@@ -22,6 +24,7 @@ const rootReducer = (state = initialState, action) => {
         pokemons: action.payload.results,
         prev: action.payload.previous,
         next: action.payload.next,
+        count: action.payload.count,
       };
 
     default:
