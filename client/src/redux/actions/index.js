@@ -10,7 +10,7 @@ export const getAllPokemons =
     return fetch(`http://${host}/pokemons/${search}`)
       .then((response) => response.json())
       .then((data) => dispatch({ type: CATCH_EM_ALL, payload: data }))
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error.message));
   };
 
 export const getTypes = () => (dispatch) => {

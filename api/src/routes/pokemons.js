@@ -99,11 +99,11 @@ router.get("/", async (req, res) => {
         image: data.image,
         attack: data.attack,
         types: data.types.map((type) => {
-          return { name: type.name };
+          return { id: type.id, name: type.name };
         }),
       };
       // Se envía el resultado por response
-      return res.send(currentPokemon);
+      return res.send({ results: [currentPokemon] });
     }
 
     // A partir de aqui manejamos el request que lista todos los pokemons cuando no se recibe nombre por query
@@ -241,7 +241,7 @@ router.get("/", async (req, res) => {
 
     res.send(pokemonsList);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 

@@ -1,6 +1,16 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 
 const Nav = (props) => {
+  const history = useHistory();
+  const [search, setSearch] = useState("");
+
+  function searchHandler(event) {
+    event.preventDefault();
+    history.push({ search: `?name=${search}` });
+    setSearch("");
+  }
+
   return (
     <>
       <header>
@@ -15,8 +25,17 @@ const Nav = (props) => {
             <li>Create Pokemon</li>
           </ul>
           <div>
-            <input type="text" name="search" id="search" />
-            <button>Buscar</button>
+            <form onSubmit={searchHandler}>
+              <input
+                onChange={(event) => setSearch(event.target.value)}
+                type="search"
+                name="search"
+                id="search"
+                value={search}
+                placeholder="Enter a Pokemon's name"
+              />
+              <button type="submit">Buscar</button>
+            </form>
           </div>
         </nav>
       </header>
