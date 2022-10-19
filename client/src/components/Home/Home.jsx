@@ -117,14 +117,31 @@ const Home = (props) => {
       <>
         <div>
           <p>
-            Order: <button onClick={handleAsc}>Asc</button> |{" "}
-            <button onClick={handleDesc}>Desc</button>
+            Order:{" "}
+            <button
+              onClick={handleAsc}
+              disabled={pokemons.length === 1 ? true : false}
+            >
+              Asc
+            </button>{" "}
+            |{" "}
+            <button
+              onClick={handleDesc}
+              disabled={pokemons.length === 1 ? true : false}
+            >
+              Desc
+            </button>
           </p>
         </div>
 
         <div>
           <label htmlFor="types">Filter by Pokemon type: </label>
-          <select onChange={handleTypeFilter} name="types" id="types">
+          <select
+            onChange={handleTypeFilter}
+            name="types"
+            id="types"
+            disabled={pokemons.length === 1 ? true : false}
+          >
             {types.map((type) => (
               <option key={type.id} value={type.id}>
                 {type.name}
@@ -135,7 +152,12 @@ const Home = (props) => {
 
         <div>
           <label htmlFor="orderby">Order by: </label>
-          <select onChange={handleOrderBy} name="orderby" id="orderby">
+          <select
+            onChange={handleOrderBy}
+            name="orderby"
+            id="orderby"
+            disabled={pokemons.length === 1 ? true : false}
+          >
             <option value="id">Number</option>
             <option value="name">Name</option>
             <option value="attack">Attack</option>
