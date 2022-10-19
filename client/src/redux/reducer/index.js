@@ -1,4 +1,4 @@
-import { CATCH_EM_ALL, PREV_OR_NEXT } from "../actions";
+import { CATCH_EM_ALL, CLEAR_POKEMONS, PREV_OR_NEXT } from "../actions";
 
 const initialState = {
   pokemons: [],
@@ -25,6 +25,12 @@ const rootReducer = (state = initialState, action) => {
         prev: action.payload.previous,
         next: action.payload.next,
         count: action.payload.count,
+      };
+
+    case CLEAR_POKEMONS:
+      return {
+        ...state,
+        pokemons: null,
       };
 
     default:
