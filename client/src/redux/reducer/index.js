@@ -1,4 +1,9 @@
-import { CATCH_EM_ALL, CLEAR_POKEMONS, PREV_OR_NEXT } from "../actions";
+import {
+  CATCH_EM_ALL,
+  CLEAR_POKEMONS,
+  GET_TYPES,
+  PREV_OR_NEXT,
+} from "../actions";
 
 const initialState = {
   pokemons: [],
@@ -6,6 +11,7 @@ const initialState = {
   next: null,
   pokemon: {},
   count: 0,
+  types: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -17,6 +23,11 @@ const rootReducer = (state = initialState, action) => {
         prev: action.payload.previous,
         next: action.payload.next,
         count: action.payload.count,
+      };
+    case GET_TYPES:
+      return {
+        ...state,
+        types: action.payload,
       };
     case PREV_OR_NEXT:
       return {
