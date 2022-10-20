@@ -142,6 +142,22 @@ const Home = (props) => {
   try {
     return (
       <>
+        {/* Selector para ordenamiendo por id, nombre o ataque */}
+        <div>
+          <label htmlFor="orderby">Order by: </label>
+          <select
+            value={querys.get("orderBy")}
+            onChange={handleOrderBy}
+            name="orderby"
+            id="orderby"
+            disabled={querys.has("name") ? true : false}
+          >
+            <option value="id">Number</option>
+            <option value="name">Name</option>
+            <option value="attack">Attack</option>
+          </select>
+        </div>
+
         {/* /// Botones de ordenamiento ascendente / descendente */}
         <div>
           <p>
@@ -165,6 +181,7 @@ const Home = (props) => {
         <div>
           <label htmlFor="types">Filter by Pokemon type: </label>
           <select
+            value={querys.get("type")}
             onChange={handleTypeFilter}
             name="types"
             id="types"
@@ -178,24 +195,11 @@ const Home = (props) => {
             ))}
           </select>
         </div>
-        {/* Selector para ordenamiendo por id, nombre o ataque */}
-        <div>
-          <label htmlFor="orderby">Order by: </label>
-          <select
-            onChange={handleOrderBy}
-            name="orderby"
-            id="orderby"
-            disabled={querys.has("name") ? true : false}
-          >
-            <option value="id">Number</option>
-            <option value="name">Name</option>
-            <option value="attack">Attack</option>
-          </select>
-        </div>
         {/* Mostrar por origen, obtenido desde la API (originales) o desde la base de datos (nuevos) */}
         <div>
           <label htmlFor="show">Show: </label>
           <select
+            defaultValue={querys.get("show")}
             onChange={handleShow}
             name="show"
             id="show"
