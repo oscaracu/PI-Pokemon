@@ -18,7 +18,7 @@ const store = { currentImg: null, currentFilename: null };
 // devuelve el listado de pokemons con los datos necesarios para desplegar la ruta principal del client.
 
 router.get("/", async (req, res) => {
-  const { name, offset, limit, order, orderBy, type, source } = req.query;
+  const { name, offset, limit, sort, orderBy, type, show } = req.query;
   // Almacenamos la url base en una constante
   const currentUrl = `http://${req.hostname}:3001${req.baseUrl}/`;
 
@@ -121,12 +121,12 @@ router.get("/", async (req, res) => {
     // El valor por defecto de offset será 0 y de limit 12 para cumplir con la paginacion solicitada en el boilerplate
 
     let sourceFilter;
-    if (source) {
-      switch (source) {
-        case "db":
+    if (show) {
+      switch (show) {
+        case "new":
           sourceFilter = { url: { [Op.is]: null } };
           break;
-        case "api":
+        case "originals":
           sourceFilter = { url: { [Op.not]: null } };
           break;
 
@@ -136,7 +136,7 @@ router.get("/", async (req, res) => {
     }
 
     const { count, rows } = await Source.findAndCountAll({
-      where: source ? sourceFilter : {},
+      where: show ? sourceFilter : {},
       include: {
         model: Type,
         where: type ? { id: type } : {},
@@ -144,7 +144,7 @@ router.get("/", async (req, res) => {
       offset: offset ? offset : 0,
       limit: limit ? limit : 12,
       // Tambien se recibe attribute y order por query para manejar el ordenamiento de la lista
-      order: [[orderBy ? orderBy : "id", order ? order : "ASC"]],
+      order: [[orderBy ? orderBy : "id", sort ? sort : "ASC"]],
     });
     const pokemonsList = {
       count: count,
@@ -156,8 +156,8 @@ router.get("/", async (req, res) => {
               paginationAux.currentOffset + paginationAux.currentLimit
             }&limit=${paginationAux.currentLimit}${
               orderBy ? `&orderBy=${orderBy}` : ""
-            }${order ? `&order=${order}` : ""}${type ? `&type=${type}` : ""}${
-              source ? `&source=${source}` : ""
+            }${sort ? `&sort=${sort}` : ""}${type ? `&type=${type}` : ""}${
+              show ? `&show=${show}` : ""
             }`,
       previous:
         paginationAux.currentOffset === 0
@@ -171,10 +171,8 @@ router.get("/", async (req, res) => {
                 ? paginationAux.currentLimit + currentDif
                 : paginationAux.currentLimit
             }${orderBy ? `&orderBy=${orderBy}` : ""}${
-              order ? `&order=${order}` : ""
-            }${type ? `&type=${type}` : ""}${
-              source ? `&source=${source}` : ""
-            }`,
+              sort ? `&sort=${sort}` : ""
+            }${type ? `&type=${type}` : ""}${show ? `&show=${show}` : ""}`,
       results: [],
     };
 
@@ -184,7 +182,7 @@ router.get("/", async (req, res) => {
     ///////////////////
     // Version 1 (Lenta)
     ///////////////////
-    //  Iteramos sobre la lista cache Source y solicitamos los datos a la API externa o Base de datos segun corresponda
+    //  Iteramos sobre la lista cache show y solicitamos los datos a la API externa o Base de datos segun corresponda
 
     // for (const source of pokemonsSource) {
 

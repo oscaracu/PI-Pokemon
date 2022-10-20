@@ -1,15 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Pokemons from "../Pokemons/Pokemons";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPokemons, getTypes } from "../../redux/actions";
 import { useLocation, useHistory } from "react-router-dom";
 import PageNotFound404 from "../PageNotFound404/PageNotFound404";
+import Pagination from "../Pagination/Pagination";
 
 const Home = (props) => {
+  // const [currentPage, setCurrentPage] = useState(null);
   // Obtenemos los querys pasados de la url para armar la paginación y los filtros
   const location = useLocation();
   const history = useHistory();
   const querys = new URLSearchParams(location.search);
+
+  let currentLimit = 12;
+  const limitQuery = querys.get("limit");
+  if (limitQuery) currentLimit = parseInt(limitQuery);
+
+  let currentPage = null;
+  const offsetQuery = querys.get("offset");
+  if (!offsetQuery) {
+    currentPage = 1;
+  } else {
+    currentPage = offsetQuery / currentLimit + 1;
+  }
 
   // Hacemos la solicitud inicial a la API
   const dispatch = useDispatch();
@@ -44,16 +58,16 @@ const Home = (props) => {
     //   });
 
     // Version 2
-    const orderQuery = querys.get("order");
-    if (orderQuery) querys.set("order", "DESC");
-    else querys.append("order", "DESC");
+    const orderQuery = querys.get("sort");
+    if (orderQuery) querys.set("sort", "DESC");
+    else querys.append("sort", "DESC");
     history.push({ search: querys.toString() });
   }
 
   function handleAsc(event) {
-    const orderQuery = querys.get("order");
-    if (orderQuery) querys.set("order", "ASC");
-    else querys.append("order", "ASC");
+    const orderQuery = querys.get("sort");
+    if (orderQuery) querys.set("sort", "ASC");
+    else querys.append("sort", "ASC");
     history.push({ search: querys.toString() });
   }
 
@@ -107,41 +121,56 @@ const Home = (props) => {
 
   function handleTypeFilter(event) {
     const typeQuery = querys.get("type");
-    if (typeQuery) querys.set("type", event.target.value);
+    if (event.target.value === "all" && typeQuery) querys.delete("type");
+    else if (typeQuery) querys.set("type", event.target.value);
     else querys.append("type", event.target.value);
     history.push({ search: querys.toString() });
   }
 
+  function handleShow(event) {
+    const typeQuery = querys.get("show");
+    if (typeQuery) querys.set("show", event.target.value);
+    else querys.append("show", event.target.value);
+    history.push({ search: querys.toString() });
+  }
+
+  ////////////////////////////////////////////////////////
+  //
+  //  1.- Agregar un render condicional cuando count sea 0 que muestre el mensaje: No se encontraron pokemons
+  //  2.- Agregar una pantalla de loading mientras pokemons.length sea 0
+
   try {
     return (
       <>
+        {/* /// Botones de ordenamiento ascendente / descendente */}
         <div>
           <p>
-            Order:{" "}
+            Sort:{" "}
             <button
               onClick={handleAsc}
-              disabled={pokemons.length === 1 ? true : false}
+              disabled={querys.has("name") ? true : false}
             >
               Asc
             </button>{" "}
             |{" "}
             <button
               onClick={handleDesc}
-              disabled={pokemons.length === 1 ? true : false}
+              disabled={querys.has("name") ? true : false}
             >
               Desc
             </button>
           </p>
         </div>
-
+        {/* Selector para filtrado por tipo de pokemon */}
         <div>
           <label htmlFor="types">Filter by Pokemon type: </label>
           <select
             onChange={handleTypeFilter}
             name="types"
             id="types"
-            disabled={pokemons.length === 1 ? true : false}
+            disabled={querys.has("name") ? true : false}
           >
+            <option value="all">All</option>
             {types.map((type) => (
               <option key={type.id} value={type.id}>
                 {type.name}
@@ -149,22 +178,37 @@ const Home = (props) => {
             ))}
           </select>
         </div>
-
+        {/* Selector para ordenamiendo por id, nombre o ataque */}
         <div>
           <label htmlFor="orderby">Order by: </label>
           <select
             onChange={handleOrderBy}
             name="orderby"
             id="orderby"
-            disabled={pokemons.length === 1 ? true : false}
+            disabled={querys.has("name") ? true : false}
           >
             <option value="id">Number</option>
             <option value="name">Name</option>
             <option value="attack">Attack</option>
           </select>
         </div>
+        {/* Mostrar por origen, obtenido desde la API (originales) o desde la base de datos (nuevos) */}
+        <div>
+          <label htmlFor="show">Show: </label>
+          <select
+            onChange={handleShow}
+            name="show"
+            id="show"
+            disabled={querys.has("name") ? true : false}
+          >
+            <option value="all">All</option>
+            <option value="originals">Originals</option>
+            <option value="new">New</option>
+          </select>
+        </div>
 
         <hr />
+        {/* Opciones de paginación */}
         <div>
           <button onClick={handlePrev} disabled={prev ? false : true}>
             Prev
@@ -173,6 +217,19 @@ const Home = (props) => {
             Next
           </button>
         </div>
+        <div>
+          <Pagination
+            totalRecords={count}
+            pageLimit={currentLimit}
+            pageNeighbours={1}
+            currentPage={currentPage}
+            prev={prev}
+            next={next}
+            history={history}
+            querys={querys}
+          />
+        </div>
+        {/* Render de resultados de busqueda */}
         <div>
           {pokemons.map((pokemon) => (
             <Pokemons key={pokemon.id} data={pokemon} />
