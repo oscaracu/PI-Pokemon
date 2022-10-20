@@ -7,7 +7,8 @@ const Nav = (props) => {
 
   function searchHandler(event) {
     event.preventDefault();
-    history.push({ search: `?name=${search}` });
+    if (search === "") history.push({ search: "" });
+    else history.push({ search: `?name=${search}` });
     setSearch("");
   }
 

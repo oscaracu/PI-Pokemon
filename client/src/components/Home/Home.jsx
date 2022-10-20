@@ -133,8 +133,13 @@ const Home = (props) => {
   function handleTypeFilter(event) {
     const typeQuery = querys.get("type");
     if (event.target.value === "all" && typeQuery) querys.delete("type");
-    else if (typeQuery) querys.set("type", event.target.value);
-    else querys.append("type", event.target.value);
+    else if (typeQuery) {
+      querys.set("type", event.target.value);
+      querys.set("offset", 0);
+    } else {
+      querys.append("type", event.target.value);
+      querys.set("offset", 0);
+    }
     history.push({ search: querys.toString() });
   }
 
