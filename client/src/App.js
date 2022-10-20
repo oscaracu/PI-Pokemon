@@ -5,6 +5,7 @@ import Home from "./components/Home/Home";
 import Landing from "./components/Landing/Landing";
 import Nav from "./components/Nav/Nav";
 import PageNotFound404 from "./components/PageNotFound404/PageNotFound404";
+import Pokemon from "./components/Pokemon/Pokemon";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Home />
           <Footer />
         </Route>
+        <Route exact path={""} component={Pokemon} />
         <Route path={"*"}>
           <Nav />
           <PageNotFound404 />
