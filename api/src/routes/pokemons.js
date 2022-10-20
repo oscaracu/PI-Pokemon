@@ -91,7 +91,12 @@ router.get("/", async (req, res) => {
         include: Type,
       });
       // Si no se encuentran resultados se devuelve un error
-      if (!data) throw new Error("Pokemon not found");
+      if (!data)
+        return res.send({
+          count: 0,
+          results: [],
+          message: "Pokemon not found",
+        });
       // Si el proceso continua creamos un objeto con el modelo que será enviado por response
       const currentPokemon = {
         id: data.id,
@@ -103,7 +108,7 @@ router.get("/", async (req, res) => {
         }),
       };
       // Se envía el resultado por response
-      return res.send({ results: [currentPokemon] });
+      return res.send({ count: 1, results: [currentPokemon] });
     }
 
     // A partir de aqui manejamos el request que lista todos los pokemons cuando no se recibe nombre por query

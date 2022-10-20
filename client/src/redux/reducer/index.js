@@ -10,7 +10,7 @@ const initialState = {
   prev: null,
   next: null,
   pokemon: {},
-  count: 0,
+  count: null,
   types: [],
 };
 

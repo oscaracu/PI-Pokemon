@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 const Nav = (props) => {
   const history = useHistory();
@@ -18,10 +18,12 @@ const Nav = (props) => {
           <div>Logo</div>
           <ul>
             <li>
-              <Link to={"/"}>Home</Link>
+              <NavLink to={"/"}>Home</NavLink>
             </li>
             <li>About</li>
-            <li>Pokemons</li>
+            <li>
+              <NavLink to={"/pokemons"}>Pokemons</NavLink>
+            </li>
             <li>Create Pokemon</li>
           </ul>
           <div>

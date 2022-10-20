@@ -1,12 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Pokemons from "../Pokemons/Pokemons";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPokemons, getTypes } from "../../redux/actions";
 import { useLocation, useHistory } from "react-router-dom";
 import PageNotFound404 from "../PageNotFound404/PageNotFound404";
 import Pagination from "../Pagination/Pagination";
+import NotFound from "../NotFound/NotFound";
+import Loading from "../Loading/Loading";
 
 const Home = (props) => {
+  const [loading, setLoading] = useState(false);
   // const [currentPage, setCurrentPage] = useState(null);
   // Obtenemos los querys pasados de la url para armar la paginación y los filtros
   const location = useLocation();
@@ -24,27 +27,35 @@ const Home = (props) => {
   } else {
     currentPage = offsetQuery / currentLimit + 1;
   }
-
+  /////////////////////////////////////////
   // Hacemos la solicitud inicial a la API
+  ////////////////////////////////////////
+
   const dispatch = useDispatch();
   useEffect(() => {
+    setLoading(true);
     dispatch(getAllPokemons(location.search));
     dispatch(getTypes());
+    setTimeout(() => {
+      setLoading(false);
+    }, 0);
   }, [location, dispatch]);
 
   // Nos suscribimos al store para renderear el componente cada vez que tengamos un cambio
 
   const { pokemons, prev, next, count, types } = useSelector((state) => state);
 
+  /////////////////////////////////////////////////
   // Declaramos nuestros handlers para cada filtro
+  /////////////////////////////////////////////////
 
-  function handlePrev(event) {
-    history.push({ search: `?${prev ? prev.split("?").pop() : ""}` });
-  }
+  // function handlePrev(event) {
+  //   history.push({ search: `?${prev ? prev.split("?").pop() : ""}` });
+  // }
 
-  function handleNext(event) {
-    history.push({ search: `?${next ? next.split("?").pop() : ""}` });
-  }
+  // function handleNext(event) {
+  //   history.push({ search: `?${next ? next.split("?").pop() : ""}` });
+  // }
 
   function handleDesc(event) {
     // Version 1
@@ -139,6 +150,8 @@ const Home = (props) => {
   //  1.- Agregar un render condicional cuando count sea 0 que muestre el mensaje: No se encontraron pokemons
   //  2.- Agregar una pantalla de loading mientras pokemons.length sea 0
 
+  if (loading) return <Loading />;
+
   try {
     return (
       <>
@@ -146,7 +159,7 @@ const Home = (props) => {
         <div>
           <label htmlFor="orderby">Order by: </label>
           <select
-            value={querys.get("orderBy")}
+            value={querys.get("orderBy") ? querys.get("orderBy") : "id"}
             onChange={handleOrderBy}
             name="orderby"
             id="orderby"
@@ -181,7 +194,7 @@ const Home = (props) => {
         <div>
           <label htmlFor="types">Filter by Pokemon type: </label>
           <select
-            value={querys.get("type")}
+            value={querys.get("type") ? querys.get("type") : "all"}
             onChange={handleTypeFilter}
             name="types"
             id="types"
@@ -199,7 +212,7 @@ const Home = (props) => {
         <div>
           <label htmlFor="show">Show: </label>
           <select
-            defaultValue={querys.get("show")}
+            defaultValue={querys.get("show") ? querys.get("show") : "all"}
             onChange={handleShow}
             name="show"
             id="show"
@@ -213,14 +226,14 @@ const Home = (props) => {
 
         <hr />
         {/* Opciones de paginación */}
-        <div>
+        {/* <div>
           <button onClick={handlePrev} disabled={prev ? false : true}>
             Prev
           </button>
           <button onClick={handleNext} disabled={next ? false : true}>
             Next
           </button>
-        </div>
+        </div> */}
         <div>
           <Pagination
             totalRecords={count}
@@ -234,10 +247,17 @@ const Home = (props) => {
           />
         </div>
         {/* Render de resultados de busqueda */}
+
         <div>
-          {pokemons.map((pokemon) => (
-            <Pokemons key={pokemon.id} data={pokemon} />
-          ))}
+          {count === 0 ? (
+            <NotFound />
+          ) : (
+            <>
+              {pokemons.map((pokemon) => (
+                <Pokemons key={pokemon.id} data={pokemon} />
+              ))}
+            </>
+          )}
         </div>
       </>
     );
