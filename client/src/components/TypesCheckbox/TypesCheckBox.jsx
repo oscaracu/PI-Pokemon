@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TypesCheckBox = ({ types }) => {
+const TypesCheckBox = ({ types, setInputs }) => {
   // Creamos un estado para los checkboxs
   const [checkedState, setCheckedState] = useState(
     new Array(types.length).fill(false)
@@ -24,6 +24,7 @@ const TypesCheckBox = ({ types }) => {
       if (check) checkedTypes.push(types[index].id);
     });
     console.log(checkedTypes);
+    setInputs((values) => ({ ...values, types: checkedTypes }));
   };
 
   return (

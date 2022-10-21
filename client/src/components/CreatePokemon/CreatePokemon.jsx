@@ -93,7 +93,7 @@ const CreatePokemon = (props) => {
           <fieldset>
             <legend>Type(s)</legend>
             {types.length > 0 ? (
-              <TypesCheckBox types={types} />
+              <TypesCheckBox types={types} setInputs={setInputs} />
             ) : (
               <p>Loading...</p>
             )}
