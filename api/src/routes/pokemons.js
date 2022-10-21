@@ -277,7 +277,7 @@ router.get("/:id", async (req, res) => {
         height,
         weight,
         types: dbResponse.types.map((type) => {
-          return { name: type.name };
+          return { id: type.id, name: type.name };
         }),
       };
       return res.send(currentPokemon);
@@ -288,6 +288,7 @@ router.get("/:id", async (req, res) => {
       );
       const apiData = apiResponse.data;
       const { sprites, stats, height, weight, types } = apiData;
+
       const currentPokemon = {
         id,
         name: dbResponse.name,
@@ -299,7 +300,13 @@ router.get("/:id", async (req, res) => {
         height,
         weight,
         types: types.map((type) => {
-          return { name: type.type.name };
+          const typeSplit = type.type.url.split("/");
+          const typeId = typeSplit[typeSplit.length - 2];
+
+          return {
+            id: typeId,
+            name: type.type.name,
+          };
         }),
       };
       res.send(currentPokemon);
