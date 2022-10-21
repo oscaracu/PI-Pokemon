@@ -8,7 +8,7 @@ import Pagination from "../Pagination/Pagination";
 import NotFound from "../NotFound/NotFound";
 import Loading from "../Loading/Loading";
 
-const Home = (props) => {
+const SearchResults = (props) => {
   const [loading, setLoading] = useState(false);
   // const [currentPage, setCurrentPage] = useState(null);
   // Obtenemos los querys pasados de la url para armar la paginación y los filtros
@@ -271,4 +271,4 @@ const Home = (props) => {
   }
 };
 
-export default Home;
+export default SearchResults;

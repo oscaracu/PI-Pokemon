@@ -23,7 +23,7 @@ export const getTypes = () => (dispatch) => {
 };
 
 export const getPokemon = (id) => (dispatch) => {
-  return fetch(`http://${host}/${id}`)
+  return fetch(`http://${host}/pokemons/${id}`)
     .then((response) => response.json())
     .then((data) => dispatch({ type: GET_POKEMON, payload: data }))
     .catch((error) => console.log(error));

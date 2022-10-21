@@ -7,8 +7,8 @@ const Nav = (props) => {
 
   function searchHandler(event) {
     event.preventDefault();
-    if (search === "") history.push({ search: "" });
-    else history.push({ search: `?name=${search}` });
+    if (search === "") history.push({ pathname: "/pokemon", search: "" });
+    else history.push({ pathname: "/pokemon", search: `?name=${search}` });
     setSearch("");
   }
 
@@ -23,7 +23,7 @@ const Nav = (props) => {
             </li>
             <li>About</li>
             <li>
-              <NavLink to={"/pokemons"}>Pokemons</NavLink>
+              <NavLink to={"/pokemon"}>Pokemons</NavLink>
             </li>
             <li>Create Pokemon</li>
           </ul>

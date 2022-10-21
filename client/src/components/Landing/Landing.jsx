@@ -4,7 +4,7 @@ const Landing = (props) => {
   return (
     <>
       <h1>Bienvenido a la Pokédex Pokemon</h1>
-      <Link to={"/pokemons"}>Entrar</Link>
+      <Link to={"/pokemon"}>Entrar</Link>
     </>
   );
 };
