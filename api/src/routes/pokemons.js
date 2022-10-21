@@ -85,12 +85,12 @@ router.get("/", async (req, res) => {
         .split(/[ \-\_]/)
         .map((word) => `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}`)
         .join(" ");
-      //Se ejecuta la consulta
+      //Se ejecutan la consultan
       const data = await Source.findOne({
         where: { name: parsedName },
         include: Type,
       });
-      // Si no se encuentran resultados se devuelve un error
+      // Si no se encuentran resultados se devuelve un mensaje y un array vacio
       if (!data)
         return res.send({
           count: 0,
@@ -260,6 +260,8 @@ router.get("/:id", async (req, res) => {
         "a number is required as a route parameter, for names use a query /?name=something"
       );
     const dbResponse = await Source.findByPk(parseInt(id), { include: Type });
+    const totalRecords = await Source.count();
+
     if (!dbResponse) throw new Error("Pokemon id not found");
     // Si la response no tiene url se obtienen los detalles de la base de datos local
     if (!dbResponse.url) {
@@ -267,6 +269,7 @@ router.get("/:id", async (req, res) => {
       const { name, image, hp, attack, defense, speed, height, weight } =
         pokemonDetails;
       const currentPokemon = {
+        totalRecords,
         id,
         name,
         image,
@@ -290,6 +293,7 @@ router.get("/:id", async (req, res) => {
       const { sprites, stats, height, weight, types } = apiData;
 
       const currentPokemon = {
+        totalRecords,
         id,
         name: dbResponse.name,
         image: sprites.other["official-artwork"].front_default,

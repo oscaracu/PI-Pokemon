@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { clearPokemon, getPokemon } from "../../redux/actions";
 import Loading from "../Loading/Loading";
 
 const Pokemon = (props) => {
+  const history = useHistory();
+
   // Creamos un estado de carga
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
@@ -29,12 +31,38 @@ const Pokemon = (props) => {
     speed,
     height,
     weight,
+    totalRecords,
   } = useSelector((state) => state.pokemon);
+
+  function prevBtnHandle() {
+    history.push(`/pokemon/${parseInt(id) - 1}`);
+  }
+
+  function nextBtnHandle() {
+    history.push(`/pokemon/${parseInt(id) + 1}`);
+  }
 
   if (loading) return <Loading />;
   else
     return (
       <>
+        <div>
+          <button onClick={() => history.goBack()}>Back</button>
+        </div>
+        <div>
+          <button
+            onClick={prevBtnHandle}
+            disabled={parseInt(id) - 1 === 0 ? true : false}
+          >
+            Prev
+          </button>
+          <button
+            onClick={nextBtnHandle}
+            disabled={parseInt(id) + 1 > parseInt(totalRecords)}
+          >
+            Next
+          </button>
+        </div>
         <div>
           <img src={image} alt={name} />
           <h1>{name}</h1>
