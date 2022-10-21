@@ -33,6 +33,9 @@ const CreatePokemon = (props) => {
       <Nav />
       <h1>¡Create a Pokemon!</h1>
       <div>
+        <img src="http://localhost:3001/images/default.png" alt="Default" />
+      </div>
+      <div>
         <form onSubmit={handleSubmit}>
           <label htmlFor="name">Name:</label>
           <input

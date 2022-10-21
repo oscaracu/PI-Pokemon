@@ -23,7 +23,6 @@ const TypesCheckBox = ({ types, setInputs }) => {
     updatedCheckedState.forEach((check, index) => {
       if (check) checkedTypes.push(types[index].id);
     });
-    console.log(checkedTypes);
     setInputs((values) => ({ ...values, types: checkedTypes }));
   };
 
