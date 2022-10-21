@@ -2,6 +2,7 @@ import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import Landing from "./components/Landing/Landing";
 import Main from "./components/Main/Main";
+import CreatePokemon from "./components/CreatePokemon/CreatePokemon";
 import PageNotFound404 from "./components/PageNotFound404/PageNotFound404";
 
 function App() {
@@ -13,6 +14,9 @@ function App() {
         </Route>
         <Route path={"/pokemon"}>
           <Main />
+        </Route>
+        <Route path={"/create"}>
+          <CreatePokemon />
         </Route>
         <Route path={"/*"}>
           <PageNotFound404 />

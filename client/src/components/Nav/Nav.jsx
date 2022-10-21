@@ -25,7 +25,9 @@ const Nav = (props) => {
             <li>
               <NavLink to={"/pokemon"}>Pokemons</NavLink>
             </li>
-            <li>Create Pokemon</li>
+            <li>
+              <NavLink to={"/create"}>Create Pokemon</NavLink>
+            </li>
           </ul>
           <div>
             <form onSubmit={searchHandler}>
