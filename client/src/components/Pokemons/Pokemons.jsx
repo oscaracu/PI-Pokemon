@@ -1,9 +1,14 @@
+import { Link, useRouteMatch } from "react-router-dom";
+
 const Pokemons = (props) => {
+  const { url } = useRouteMatch();
   const { id, name, image, types } = props.data;
   return (
     <>
       <div>
-        <img src={image} alt={name} />
+        <Link to={`${url}/${id}`}>
+          <img src={image} alt={name} />
+        </Link>
         <h1>{name}</h1>
         <p>N.°{id}</p>
         <ul>

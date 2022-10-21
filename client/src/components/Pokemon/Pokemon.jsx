@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getPokemon } from "../../redux/actions";
+import { clearPokemon, getPokemon } from "../../redux/actions";
 import Loading from "../Loading/Loading";
 
 const Pokemon = (props) => {
@@ -16,6 +16,7 @@ const Pokemon = (props) => {
     setTimeout(() => {
       setLoading(false);
     }, 0);
+    return () => dispatch(clearPokemon());
   }, [dispatch, id]);
 
   const {
@@ -35,7 +36,7 @@ const Pokemon = (props) => {
     return (
       <>
         <div>
-          <img src={image} alt="Pokemon" />
+          <img src={image} alt={name} />
           <h1>{name}</h1>
           <h2>{id}</h2>
           <ul>

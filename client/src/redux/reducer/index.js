@@ -1,7 +1,7 @@
 import {
   CATCH_EM_ALL,
   GET_POKEMON,
-  // CLEAR_POKEMONS,
+  CLEAR_POKEMON,
   GET_TYPES,
   // PREV_OR_NEXT,
 } from "../actions";
@@ -36,6 +36,11 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         pokemon: action.payload,
       };
+    case CLEAR_POKEMON:
+      return {
+        ...state,
+        pokemon: {},
+      };
     // case PREV_OR_NEXT:
     //   return {
     //     ...state,
@@ -43,12 +48,6 @@ const rootReducer = (state = initialState, action) => {
     //     prev: action.payload.previous,
     //     next: action.payload.next,
     //     count: action.payload.count,
-    //   };
-
-    // case CLEAR_POKEMONS:
-    //   return {
-    //     ...state,
-    //     pokemons: null,
     //   };
 
     default:

@@ -1,6 +1,6 @@
 export const CATCH_EM_ALL = "CATCH_EM_ALL";
 // export const PREV_OR_NEXT = "PREV_OR_NEXT";
-// export const CLEAR_POKEMONS = "CLEAR_POKEMONS";
+export const CLEAR_POKEMON = "CLEAR_POKEMON";
 export const GET_TYPES = "GET_TYPES";
 export const GET_POKEMON = "GET_POKEMON";
 
@@ -29,6 +29,9 @@ export const getPokemon = (id) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
+export const clearPokemon = () => (dispatch) =>
+  dispatch({ type: CLEAR_POKEMON });
+
 // Candidatos a ser eliminados
 
 // export const getPrevOrNext = (url) => (dispatch) =>
@@ -36,6 +39,3 @@ export const getPokemon = (id) => (dispatch) => {
 //     .then((response) => response.json())
 //     .then((data) => dispatch({ type: PREV_OR_NEXT, payload: data }))
 //     .catch((error) => console.log(error));
-
-// export const clearPokemons = () => (dispatch) =>
-//   dispatch({ type: CLEAR_POKEMONS });
