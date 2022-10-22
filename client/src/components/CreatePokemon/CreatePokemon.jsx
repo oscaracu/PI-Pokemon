@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { getTypes } from "../../redux/actions";
+// import { getTypes } from "../../redux/actions";
 import Footer from "../Footer/Footer";
 import Nav from "../Nav/Nav";
 import TypesCheckBox from "../TypesCheckbox/TypesCheckBox";
@@ -13,14 +13,14 @@ const CreatePokemon = (props) => {
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
   const [inputs, setInputs] = useState({ types: [] });
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { types } = useSelector((state) => state);
 
-  useEffect(() => {
-    if (types.length === 0) {
-      dispatch(getTypes());
-    }
-  }, [dispatch, types]);
+  // useEffect(() => {
+  //   if (types.length === 0) {
+  //     dispatch(getTypes());
+  //   }
+  // }, [dispatch, types]);
 
   function handleChange(event) {
     const { name, value } = event.target;

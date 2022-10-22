@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Pokemons from "../Pokemons/Pokemons";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllPokemons, getTypes } from "../../redux/actions";
+import { useSelector } from "react-redux";
+// import { getAllPokemons, getTypes } from "../../redux/actions";
 import { useLocation, useHistory } from "react-router-dom";
 import PageNotFound404 from "../PageNotFound404/PageNotFound404";
 import Pagination from "../Pagination/Pagination";
@@ -31,15 +31,15 @@ const SearchResults = (props) => {
   // Hacemos la solicitud inicial a la API
   ////////////////////////////////////////
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   useEffect(() => {
     setLoading(true);
-    dispatch(getAllPokemons(location.search));
-    dispatch(getTypes());
+    // dispatch(getAllPokemons(location.search));
+    // dispatch(getTypes());
     setTimeout(() => {
       setLoading(false);
     }, 0);
-  }, [location, dispatch]);
+  }, []);
 
   // Nos suscribimos al store para renderear el componente cada vez que tengamos un cambio
 
