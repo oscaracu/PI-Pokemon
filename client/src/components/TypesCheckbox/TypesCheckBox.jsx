@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TypesCheckBox = ({ types, setInputs }) => {
+const TypesCheckBox = ({ types, setInputs, setErrors }) => {
   // Creamos un estado para los checkboxs
   const [checkedState, setCheckedState] = useState(
     new Array(types.length).fill(false)
@@ -23,6 +23,7 @@ const TypesCheckBox = ({ types, setInputs }) => {
     updatedCheckedState.forEach((check, index) => {
       if (check) checkedTypes.push(types[index].id);
     });
+    setErrors(validate({ types: checkedTypes }));
     setInputs((values) => ({ ...values, types: checkedTypes }));
   };
 
@@ -44,5 +45,17 @@ const TypesCheckBox = ({ types, setInputs }) => {
     </ul>
   );
 };
+
+export function validate(inputs) {
+  const errors = {};
+
+  if (inputs.types.length === 0) {
+    errors.types = "You must choose at least one type of pokemon";
+  } else if (inputs.types.length > 3) {
+    errors.types = "You can't select more than 3 types of pokemon";
+  }
+
+  return errors;
+}
 
 export default TypesCheckBox;
