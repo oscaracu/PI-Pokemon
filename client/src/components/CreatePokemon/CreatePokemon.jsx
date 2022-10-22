@@ -7,6 +7,8 @@ import TypesCheckBox from "../TypesCheckbox/TypesCheckBox";
 
 const CreatePokemon = (props) => {
   // Creamos en estado para el formulario controlado
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
   const [inputs, setInputs] = useState({});
   const dispatch = useDispatch();
   const { types } = useSelector((state) => state);
@@ -20,12 +22,53 @@ const CreatePokemon = (props) => {
   function handleChange(event) {
     const name = event.target.name;
     const value = event.target.value;
+
     setInputs((values) => ({ ...values, [name]: value }));
   }
 
   function handleSubmit(event) {
     event.preventDefault();
     console.log(inputs);
+    fetch("http://localhost:3001/pokemons", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inputs),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+    setInputs({});
+    setSelectedFile();
+    setIsFilePicked(false);
+
+    console.log(inputs);
+  }
+
+  function handleImageLoad(event) {
+    const formData = new FormData();
+    formData.append("img", event.target.files[0]);
+    console.log(event.target.files[0]);
+    fetch("http://localhost:3001/pokemons/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("Success:", result);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+    setSelectedFile(event.target.files[0]);
+    setIsFilePicked(true);
   }
 
   return (
@@ -33,7 +76,14 @@ const CreatePokemon = (props) => {
       <Nav />
       <h1>¡Create a Pokemon!</h1>
       <div>
-        <img src="http://localhost:3001/images/default.png" alt="Default" />
+        <img
+          src={
+            isFilePicked
+              ? URL.createObjectURL(selectedFile)
+              : "http://localhost:3001/images/default.png"
+          }
+          alt="Preview"
+        />
       </div>
       <div>
         <form onSubmit={handleSubmit}>
@@ -45,6 +95,9 @@ const CreatePokemon = (props) => {
             value={inputs.name || ""}
             onChange={handleChange}
           />
+          {/* /// Input de archivo de imagen */}
+          <input type="file" name="img" id="img" onChange={handleImageLoad} />
+          {/* /// Input de atributos  */}
           <label htmlFor="hp">HP:</label>
           <input
             type="number"
