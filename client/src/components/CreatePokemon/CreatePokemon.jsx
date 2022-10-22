@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { getTypes } from "../../redux/actions";
 import Footer from "../Footer/Footer";
 import Nav from "../Nav/Nav";
 import TypesCheckBox from "../TypesCheckbox/TypesCheckBox";
 
 const CreatePokemon = (props) => {
+  const history = useHistory();
   // Creamos en estado para el formulario controlado
   const [errors, setErrors] = useState({});
   const [selectedFile, setSelectedFile] = useState();
@@ -39,6 +41,7 @@ const CreatePokemon = (props) => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        history.push(`/pokemon/${data.id}`);
       })
       .catch((error) => {
         console.error("Error:", error);
