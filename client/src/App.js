@@ -7,6 +7,7 @@ import PageNotFound404 from "./components/PageNotFound404/PageNotFound404";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getAllPokemons } from "./redux/actions";
+import Loading from "./components/Loading/Loading";
 
 function App() {
   const { search } = useLocation();
@@ -44,6 +45,7 @@ function App() {
         <Route path={"/create"}>
           <CreatePokemon />
         </Route>
+        <Route path={"/loading"} component={Loading} />
         <Route path={"/*"}>
           <PageNotFound404 />
         </Route>
