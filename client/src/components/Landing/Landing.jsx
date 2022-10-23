@@ -1,13 +1,24 @@
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getPokemon } from "../../redux/actions";
 
 const Landing = (props) => {
-  const pokemons = useSelector((state) => state.pokemons);
-  console.log(pokemons);
+  const { count, dispatch, useEffect, useSelector } = props;
+
+  const randIdx = Math.floor(Math.random() * count);
+
+  useEffect(() => {
+    dispatch(getPokemon(randIdx === 0 ? 1 : randIdx));
+  }, [dispatch, randIdx]);
+
+  const { pokemon } = useSelector((state) => state);
+
+  console.log(pokemon);
 
   return (
     <>
-      <h1>Bienvenido a la Pokédex Pokemon</h1>
+      <div>
+        <img src="" alt="" />
+      </div>
       <Link to={"/pokemon"}>Entrar</Link>
     </>
   );

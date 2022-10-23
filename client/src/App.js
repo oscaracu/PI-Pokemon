@@ -4,14 +4,12 @@ import Landing from "./components/Landing/Landing";
 import Main from "./components/Main/Main";
 import CreatePokemon from "./components/CreatePokemon/CreatePokemon";
 import PageNotFound404 from "./components/PageNotFound404/PageNotFound404";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getAllPokemons, getTypes } from "./redux/actions";
+import { getAllPokemons } from "./redux/actions";
 
 function App() {
   const { search } = useLocation();
-
-  console.log(search);
 
   ///////////////////////////////////////////////////////////
   // Manejamos las solicitudes inicial a nuestro back-end API
@@ -23,18 +21,25 @@ function App() {
     dispatch(getAllPokemons(search ? search : ""));
   }, [dispatch, search]);
 
-  useEffect(() => {
-    dispatch(getTypes());
-  }, [dispatch]);
+  const { count } = useSelector((state) => state);
 
   return (
     <div className="App">
       <Switch>
         <Route exact path={"/"}>
-          <Landing />
+          <Landing
+            count={count}
+            dispatch={dispatch}
+            useEffect={useEffect}
+            useSelector={useSelector}
+          />
         </Route>
         <Route path={"/pokemon"}>
-          <Main />
+          <Main
+            dispatch={dispatch}
+            useEffect={useEffect}
+            useSelector={useSelector}
+          />
         </Route>
         <Route path={"/create"}>
           <CreatePokemon />
