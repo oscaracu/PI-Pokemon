@@ -82,10 +82,12 @@ const Landing = (props) => {
     }
   `;
 
-  if (!randomPokemon.isSet) {
-    return <Loading />;
-  } else {
-    return (
+  // if (!randomPokemon.isSet) {
+  //   return <Loading />;
+  // } else {
+  return (
+    <>
+      {!randomPokemon.isSet ? <Loading /> : ""}
       <Box>
         <div className="container">
           <div className="big-pokemon">
@@ -102,14 +104,15 @@ const Landing = (props) => {
             </div>
             <div>
               <Link className="btn" to={"/pokemon"}>
-                Entrar
+                Catch'em All!
               </Link>
             </div>
           </div>
         </div>
       </Box>
-    );
-  }
+    </>
+  );
 };
+// };
 
 export default Landing;

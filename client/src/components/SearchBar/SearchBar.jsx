@@ -1,7 +1,8 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-const Main = styled.div`
+const SearchSection = styled.div`
   color: #2c3e50;
 
   .top {
@@ -98,9 +99,19 @@ const Main = styled.div`
 `;
 
 const Nav = (props) => {
+  const history = useHistory();
+  const [search, setSearch] = useState("");
+
+  function searchHandler(event) {
+    event.preventDefault();
+    if (search === "") history.push({ pathname: "/pokemon", search: "" });
+    else history.push({ pathname: "/pokemon", search: `?name=${search}` });
+    setSearch("");
+  }
+
   return (
     <>
-      <Main>
+      <SearchSection>
         <header>
           <div className="top">New pokemon are coming!</div>
           <nav>
@@ -130,8 +141,23 @@ const Nav = (props) => {
               </div>
             </div>
           </nav>
+          <section className="search">
+            <div>
+              <form onSubmit={searchHandler}>
+                <input
+                  onChange={(event) => setSearch(event.target.value)}
+                  type="search"
+                  name="search"
+                  id="search"
+                  value={search}
+                  placeholder="Enter a Pokemon's name"
+                />
+                <button type="submit">Buscar</button>
+              </form>
+            </div>
+          </section>
         </header>
-      </Main>
+      </SearchSection>
     </>
   );
 };
