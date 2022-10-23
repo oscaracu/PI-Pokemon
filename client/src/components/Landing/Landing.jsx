@@ -1,18 +1,21 @@
 import { Link } from "react-router-dom";
-import { getPokemon } from "../../redux/actions";
+// import { getPokemon } from "../../redux/actions";
 
 const Landing = (props) => {
-  const { count, dispatch, useEffect, useSelector } = props;
+  // const { count, dispatch, useEffect, useSelector } = props;
 
-  const randIdx = Math.floor(Math.random() * count);
+  // useEffect(()=> {
+  //   const randIdx = Math.floor(Math.random() * count);
 
-  useEffect(() => {
-    dispatch(getPokemon(randIdx === 0 ? 1 : randIdx));
-  }, [dispatch, randIdx]);
+  // })
 
-  const { pokemon } = useSelector((state) => state);
+  // useEffect(() => {
+  //   dispatch(getPokemon(randIdx === 0 ? 1 : randIdx));
+  // }, [dispatch, randIdx]);
 
-  console.log(pokemon);
+  // const { pokemon } = useSelector((state) => state);
+
+  // console.log(pokemon);
 
   return (
     <>
