@@ -7,6 +7,118 @@ import PageNotFound404 from "../PageNotFound404/PageNotFound404";
 import Pagination from "../Pagination/Pagination";
 import NotFound from "../NotFound/NotFound";
 import Loading from "../Loading/Loading";
+import styled from "styled-components";
+
+const SearchSection = styled.section`
+  color: #2c3e50;
+  font-family: "Fredoka", sans-serif;
+
+  .filters {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-shadow: 0 5px 10px #34495e;
+
+    .container {
+      width: 80%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-color: red;
+
+      .filter {
+        font-family: "Fredoka", sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: #ecf0f1;
+        text-shadow: 1px 1px 3px black, 1px 1px 3px black;
+        overflow: hidden;
+
+        .clear {
+          min-width: 110px;
+
+          font-family: inherit;
+          text-transform: inherit;
+          font-weight: inherit;
+          color: #ecf0f1;
+          background-color: #34495e;
+          border: none;
+          padding: 10px 15px;
+          margin: 12px;
+          :hover {
+            background-color: #c0392b;
+            color: #ecf0f1;
+          }
+        }
+
+        .dropdown {
+          overflow: hidden;
+          margin: 12px;
+          .dropbtn {
+            min-width: 110px;
+
+            font-family: inherit;
+            text-transform: inherit;
+            font-weight: inherit;
+            color: #2c3e50;
+            background-color: #ecf0f1;
+            border: none;
+            padding: 10px 15px;
+            margin: 0;
+            :hover {
+              background-color: #34495e;
+              color: #ecf0f1;
+            }
+          }
+        }
+
+        button:hover,
+        .dropdown:hover .dropbtn {
+          background-color: #34495e;
+          color: #ecf0f1;
+        }
+
+        .dropdown-content {
+          min-width: 110px;
+          background-color: #ecf0f1;
+          position: absolute;
+          box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+          z-index: 1;
+          display: none;
+          flex-direction: column;
+          button {
+            font-family: inherit;
+            text-transform: inherit;
+            font-weight: inherit;
+            color: #2c3e50;
+            padding: 7px 15px;
+            text-align: center;
+            border: none;
+            outline: none;
+            background-color: #ecf0f1;
+            :hover {
+              background-color: #34495e;
+              color: #ecf0f1;
+            }
+          }
+        }
+
+        .dropdown:hover .dropdown-content {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      /* .navbar {
+  background-color: #333;
+} */
+    }
+  }
+`;
 
 const SearchResults = (props) => {
   const [loading, setLoading] = useState(false);
@@ -82,7 +194,7 @@ const SearchResults = (props) => {
     history.push({ search: querys.toString() });
   }
 
-  function handleOrderBy(event) {
+  function handleOrderBy(value) {
     // VERSION 1
     // if (location.search === "")
     //   history.push({
@@ -125,28 +237,35 @@ const SearchResults = (props) => {
 
     // VERSION 2
     const orderByQuery = querys.get("orderBy");
-    if (orderByQuery) querys.set("orderBy", event.target.value);
-    else querys.append("orderBy", event.target.value);
+    if (orderByQuery) querys.set("orderBy", value);
+    else querys.append("orderBy", value);
     history.push({ search: querys.toString() });
   }
 
-  function handleTypeFilter(event) {
+  function handleTypeFilter(value) {
     const typeQuery = querys.get("type");
-    if (event.target.value === "all" && typeQuery) querys.delete("type");
+    if (value === "all" && typeQuery) querys.delete("type");
     else if (typeQuery) {
-      querys.set("type", event.target.value);
+      querys.set("type", value);
       querys.set("offset", 0);
     } else {
-      querys.append("type", event.target.value);
+      querys.append("type", value);
       querys.set("offset", 0);
     }
     history.push({ search: querys.toString() });
   }
 
-  function handleShow(event) {
+  function handleShow(value) {
     const typeQuery = querys.get("show");
-    if (typeQuery) querys.set("show", event.target.value);
-    else querys.append("show", event.target.value);
+    if (typeQuery) querys.set("show", value);
+    else querys.append("show", value);
+    history.push({ search: querys.toString() });
+  }
+
+  function handleSort(value) {
+    const typeQuery = querys.get("sort");
+    if (typeQuery) querys.set("sort", value);
+    else querys.append("sort", value);
     history.push({ search: querys.toString() });
   }
 
@@ -160,110 +279,209 @@ const SearchResults = (props) => {
   try {
     return (
       <>
-        {/* Selector para ordenamiendo por id, nombre o ataque */}
-        <div>
-          <label htmlFor="orderby">Order by: </label>
-          <select
-            value={querys.get("orderBy") ? querys.get("orderBy") : "id"}
-            onChange={handleOrderBy}
-            name="orderby"
-            id="orderby"
-            disabled={querys.has("name") ? true : false}
-          >
-            <option value="id">Number</option>
-            <option value="name">Name</option>
-            <option value="attack">Attack</option>
-          </select>
-        </div>
+        <SearchSection>
+          <div className="filters">
+            <div className="container">
+              {/* Selector para ordenamiendo por id, nombre o ataque */}
+              {/* <div className="filter">
+                <label htmlFor="orderby">Order by: </label>
+                <select
+                  value={querys.get("orderBy") ? querys.get("orderBy") : "id"}
+                  onChange={handleOrderBy}
+                  name="orderby"
+                  id="orderby"
+                  disabled={querys.has("name") ? true : false}
+                >
+                  <option value="id">Number</option>
+                  <option value="name">Name</option>
+                  <option value="attack">Attack</option>
+                </select>
+              </div> */}
 
-        {/* /// Botones de ordenamiento ascendente / descendente */}
-        <div>
-          <p>
-            Sort:{" "}
-            <button
-              onClick={handleAsc}
-              disabled={querys.has("name") ? true : false}
-            >
-              Asc
-            </button>{" "}
-            |{" "}
-            <button
-              onClick={handleDesc}
-              disabled={querys.has("name") ? true : false}
-            >
-              Desc
-            </button>
-          </p>
-        </div>
-        {/* Selector para filtrado por tipo de pokemon */}
-        <div>
-          <label htmlFor="types">Filter by Pokemon type: </label>
-          <select
-            value={querys.get("type") ? querys.get("type") : "all"}
-            onChange={handleTypeFilter}
-            name="types"
-            id="types"
-            disabled={querys.has("name") ? true : false}
-          >
-            <option value="all">All</option>
-            {types.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {/* Mostrar por origen, obtenido desde la API (originales) o desde la base de datos (nuevos) */}
-        <div>
-          <label htmlFor="show">Show: </label>
-          <select
-            defaultValue={querys.get("show") ? querys.get("show") : "all"}
-            onChange={handleShow}
-            name="show"
-            id="show"
-            disabled={querys.has("name") ? true : false}
-          >
-            <option value="all">All</option>
-            <option value="originals">Originals</option>
-            <option value="new">New</option>
-          </select>
-        </div>
+              {/* // VERSION 2 */}
 
-        <hr />
-        {/* Opciones de paginación */}
-        {/* <div>
+              <div className="filter">
+                <div className="dropdown">
+                  <button className="dropbtn">
+                    Order by
+                    <span> ▼ </span>
+                  </button>
+                  <div className="dropdown-content">
+                    <button onClick={() => handleOrderBy("id")}>Number</button>
+                    <button onClick={() => handleOrderBy("name")}>Name</button>
+                    <button onClick={() => handleOrderBy("attack")}>
+                      Attack
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* /// Botones de ordenamiento ascendente / descendente */}
+
+              {/* <div className="filter">
+                <label htmlFor="sort">Sort: </label>
+                <select
+                  value={querys.get("sort") ? querys.get("sort") : "ASC"}
+                  onChange={handleSort}
+                  name="sort"
+                  id="sort"
+                  disabled={querys.has("name") ? true : false}
+                >
+                  <option value="ASC">Asc</option>
+                  <option value="DESC">Desc</option>
+                </select>
+              </div> */}
+
+              {/* // VERSION 3 */}
+
+              <div className="filter">
+                <div className="dropdown">
+                  <button className="dropbtn">
+                    Sort
+                    <span> ▼ </span>
+                  </button>
+                  <div className="dropdown-content">
+                    <button onClick={() => handleSort("ASC")}>Asc</button>
+                    <button onClick={() => handleSort("DESC")}>Desc</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* <div>
+              <p>
+                Sort:{" "}
+                <button
+                  onClick={handleAsc}
+                  disabled={querys.has("name") ? true : false}
+                >
+                  Asc
+                </button>{" "}
+                |{" "}
+                <button
+                  onClick={handleDesc}
+                  disabled={querys.has("name") ? true : false}
+                >
+                  Desc
+                </button>
+              </p>
+            </div> */}
+              {/* Selector para filtrado por tipo de pokemon */}
+              {/* <div className="filter">
+                <label htmlFor="types">Filter by type: </label>
+                <select
+                  value={querys.get("type") ? querys.get("type") : "all"}
+                  onChange={handleTypeFilter}
+                  name="types"
+                  id="types"
+                  disabled={querys.has("name") ? true : false}
+                >
+                  <option value="all">All</option>
+                  {types.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
+              </div> */}
+
+              {/* VERSION 2 */}
+
+              <div className="filter">
+                <div className="dropdown">
+                  <button className="dropbtn">
+                    Type
+                    <span> ▼ </span>
+                  </button>
+                  <div className="dropdown-content">
+                    <button onClick={() => handleTypeFilter("all")}>All</button>
+
+                    {types.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => handleTypeFilter(type.id)}
+                      >
+                        {type.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Mostrar por origen, obtenido desde la API (originales) o desde la base de datos (nuevos) */}
+              {/* <div className="filter">
+                <label htmlFor="show">Show: </label>
+                <select
+                  defaultValue={querys.get("show") ? querys.get("show") : "all"}
+                  onChange={handleShow}
+                  name="show"
+                  id="show"
+                  disabled={querys.has("name") ? true : false}
+                >
+                  <option value="all">All</option>
+                  <option value="originals">Originals</option>
+                  <option value="new">New</option>
+                </select>
+              </div> */}
+
+              <div className="filter">
+                <div className="dropdown">
+                  <button className="dropbtn">
+                    Show
+                    <span> ▼ </span>
+                  </button>
+                  <div className="dropdown-content">
+                    <button onClick={() => handleShow("all")}>All</button>
+                    <button onClick={() => handleShow("originals")}>
+                      Originals
+                    </button>
+                    <button onClick={() => handleShow("new")}>New</button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="filter">
+                <button className="clear">Reset</button>
+              </div>
+            </div>
+          </div>
+
+          {/* // VERSION 2 */}
+
+          {/* Opciones de paginación */}
+          {/* <div>
           <button onClick={handlePrev} disabled={prev ? false : true}>
-            Prev
+          Prev
           </button>
           <button onClick={handleNext} disabled={next ? false : true}>
-            Next
+          Next
           </button>
         </div> */}
-        <div>
-          <Pagination
-            totalRecords={count}
-            pageLimit={currentLimit}
-            pageNeighbours={1}
-            currentPage={currentPage}
-            prev={prev}
-            next={next}
-            history={history}
-            querys={querys}
-          />
-        </div>
-        {/* Render de resultados de busqueda */}
+          <div>
+            <Pagination
+              totalRecords={count}
+              pageLimit={currentLimit}
+              pageNeighbours={1}
+              currentPage={currentPage}
+              prev={prev}
+              next={next}
+              history={history}
+              querys={querys}
+            />
+          </div>
+          {/* Render de resultados de busqueda */}
 
-        <div>
-          {count === 0 ? (
-            <NotFound />
-          ) : (
-            <>
-              {pokemons.map((pokemon) => (
-                <Pokemons key={pokemon.id} data={pokemon} />
-              ))}
-            </>
-          )}
-        </div>
+          <div>
+            {count === 0 ? (
+              <NotFound />
+            ) : (
+              <>
+                {pokemons.map((pokemon) => (
+                  <Pokemons key={pokemon.id} data={pokemon} />
+                ))}
+              </>
+            )}
+          </div>
+        </SearchSection>
       </>
     );
   } catch (error) {
