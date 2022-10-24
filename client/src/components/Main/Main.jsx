@@ -20,7 +20,7 @@ const Main = (props) => {
       <SearchBar />
       <Switch>
         <Route exact path={path}>
-          <SearchResults />
+          <SearchResults dispatch={dispatch} />
         </Route>
         <Route path={`${path}/:id`}>
           <Pokemon />

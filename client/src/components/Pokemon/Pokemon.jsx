@@ -3,6 +3,352 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { clearPokemon, getPokemon } from "../../redux/actions";
 import Loading from "../Loading/Loading";
+import PageNotFound404 from "../PageNotFound404/PageNotFound404";
+import styled from "styled-components";
+
+const PokemonSection = styled.section`
+  color: #2c3e50;
+  font-family: "Fredoka", sans-serif;
+  background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
+
+  div {
+    border: 1px solid black;
+  }
+
+  .container {
+    background-color: #ecf0f1cc;
+    backdrop-filter: grayscale(60%);
+    font-family: "Signika", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .summary {
+      background-color: #ecf0f1;
+      width: 75%;
+      margin: 3em;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      position: relative;
+
+      h2 {
+        margin: 0;
+        margin-bottom: 25px;
+        font-family: "Fredoka", sans-serif;
+        font-size: 4em;
+        color: #2980b9;
+
+        .badge {
+          font-family: "Signika", sans-serif;
+          background-color: #7f8c8d;
+          color: #ecf0f1;
+          padding: 0px 10px;
+          text-align: center;
+          border-radius: 5px;
+        }
+      }
+
+      .character-image {
+        img {
+          width: 100%;
+          height: auto;
+        }
+      }
+
+      .info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .types {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          gap: 5px;
+
+          .normal {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/normal.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #7f8c8d;
+            border-radius: 10px;
+          }
+
+          .fighting {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/fighting.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #f39c12;
+            border-radius: 10px;
+          }
+
+          .bug {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/bug.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #27ae60;
+            border-radius: 10px;
+          }
+
+          .dark {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/dark.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #2c3e50;
+            border-radius: 10px;
+          }
+
+          .dragon {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/dragon.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #341f97;
+            border-radius: 10px;
+          }
+
+          .electric {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/electric.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #f1c40f;
+            border-radius: 10px;
+          }
+
+          .fairy {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/fairy.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #ff9ff3;
+            border-radius: 10px;
+          }
+
+          .fire {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/fire.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #d35400;
+            border-radius: 10px;
+          }
+
+          .flying {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/flying.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #3498db;
+            border-radius: 10px;
+          }
+
+          .ghost {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/ghost.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #8e44ad;
+            border-radius: 10px;
+          }
+
+          .grass {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/grass.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #16a085;
+            border-radius: 10px;
+          }
+
+          .ground {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/ground.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #cc8e35;
+            border-radius: 10px;
+          }
+
+          .ice {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/ice.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #54a0ff;
+            border-radius: 10px;
+          }
+
+          .poison {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/poison.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #9b59b6;
+            border-radius: 10px;
+          }
+
+          .psychic {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/psychic.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #ff5252;
+            border-radius: 10px;
+          }
+
+          .rock {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/rock.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #ccae62;
+            border-radius: 10px;
+          }
+
+          .steel {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/steel.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #34495e;
+            border-radius: 10px;
+          }
+
+          .water {
+            font-family: "Secular One", sans-serif;
+            font-size: 0.8em;
+            color: #ecf0f1;
+            background: url("http://localhost:3001/images/front/types/water.svg")
+              no-repeat 6px center;
+            background-size: 16px;
+            padding: 4px 8px 1px;
+            padding-left: 24px;
+            background-color: #34ace0;
+            border-radius: 10px;
+          }
+        }
+      }
+
+      div {
+        width: 100%;
+      }
+    }
+
+    .nav {
+      width: 100%;
+      min-height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      box-shadow: 0 5px 10px #bdc3c7;
+
+      .arrows,
+      .back {
+        text-transform: uppercase;
+        font-family: "Fredoka", sans-serif;
+        font-size: 1.6em;
+        font-weight: 500;
+        text-shadow: 1px 1px 3px black, 1px 1px 3px black;
+        color: #ecf0f1;
+        border: none;
+        background-color: unset;
+        padding: 5px 25px;
+        :hover {
+          color: #f1c40f;
+        }
+      }
+
+      .back {
+        background-color: #34495e;
+        :hover {
+          background-color: #e74c3c;
+        }
+      }
+    }
+  }
+`;
 
 const Pokemon = (props) => {
   const history = useHistory();
@@ -12,12 +358,14 @@ const Pokemon = (props) => {
   const { id } = useParams();
   // Solicitamos los datos a nuestra API
   const dispatch = useDispatch();
+
   useEffect(() => {
     setLoading(true);
     dispatch(getPokemon(parseInt(id)));
     setTimeout(() => {
       setLoading(false);
     }, 0);
+
     return () => dispatch(clearPokemon());
   }, [dispatch, id]);
 
@@ -42,47 +390,65 @@ const Pokemon = (props) => {
     history.push(`/pokemon/${parseInt(id) + 1}`);
   }
 
-  if (loading) return <Loading />;
-  else
-    return (
-      <>
-        <div>
-          <button onClick={() => history.goBack()}>Back</button>
-        </div>
-        <div>
+  if (isNaN(id)) {
+    return <PageNotFound404 />;
+  } else if (loading) {
+    return <Loading />;
+  }
+
+  return (
+    <PokemonSection>
+      <div className="container">
+        <div className="nav">
           <button
+            className="arrows"
             onClick={prevBtnHandle}
             disabled={parseInt(id) - 1 === 0 ? true : false}
           >
-            Prev
+            ◄ Prev
+          </button>
+
+          <button className="back" onClick={() => history.goBack()}>
+            Back
           </button>
           <button
+            className="arrows"
             onClick={nextBtnHandle}
             disabled={parseInt(id) + 1 > parseInt(totalRecords)}
           >
-            Next
+            Next ►
           </button>
         </div>
-        <div>
-          <img src={image} alt={name} />
-          <h1>{name}</h1>
-          <h2>{id}</h2>
-          <ul>
-            {types.map((type) => (
-              <li key={type.id}>{type.name}</li>
-            ))}
-          </ul>
-          <ul>
-            <li>hp: {hp}</li>
-            <li>attack: {attack}</li>
-            <li>defense: {defense}</li>
-            <li>speed: {speed}</li>
-          </ul>
-          <p>height: {height}</p>
-          <p>weight: {weight}</p>
+        <div className="summary">
+          <div className="character-image">
+            <img src={image} alt={name} />
+          </div>
+          <div className="info">
+            <div>
+              <h2>
+                {name} <span className="badge">#{id}</span>{" "}
+              </h2>
+              <ul className="types">
+                {types.map((type) => (
+                  <li className={type.name} key={type.id}>
+                    {type.name.toUpperCase()}
+                  </li>
+                ))}
+              </ul>
+              <ul>
+                <li>hp: {hp}</li>
+                <li>attack: {attack}</li>
+                <li>defense: {defense}</li>
+                <li>speed: {speed}</li>
+              </ul>
+              <p>height: {height}</p>
+              <p>weight: {weight}</p>
+            </div>
+          </div>
         </div>
-      </>
-    );
+      </div>
+    </PokemonSection>
+  );
 };
 
 export default Pokemon;

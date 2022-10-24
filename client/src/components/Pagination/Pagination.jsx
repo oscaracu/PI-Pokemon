@@ -21,7 +21,7 @@ const PaginationDiv = styled.div`
   font-family: "Fredoka", sans-serif;
 
   nav {
-    margin: 50px auto;
+    margin-top: 20px;
 
     ul {
       list-style-type: none;

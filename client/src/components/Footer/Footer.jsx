@@ -7,9 +7,14 @@ const StyledFooter = styled.footer`
   color: #ecf0f1;
   text-align: center;
   text-shadow: 2px 2px 5px black;
+
+  p {
+    margin: 5px;
+  }
+
   span {
     color: #f1c40f;
-    font-size: 1.6em;
+    font-size: 1.2em;
     padding: 5px;
   }
 `;

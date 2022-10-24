@@ -8,6 +8,7 @@ import Pagination from "../Pagination/Pagination";
 import NotFound from "../NotFound/NotFound";
 import Loading from "../Loading/Loading";
 import styled from "styled-components";
+import { clearPokemon } from "../../redux/actions";
 
 const SearchSection = styled.section`
   color: #2c3e50;
@@ -26,7 +27,7 @@ const SearchSection = styled.section`
     flex-direction: column;
 
     .container {
-      margin-top: 4em;
+      margin: 3em;
       width: 75%;
       display: flex;
       flex-wrap: wrap;
@@ -145,6 +146,7 @@ const SearchSection = styled.section`
 `;
 
 const SearchResults = (props) => {
+  const { dispatch } = props;
   const [loading, setLoading] = useState(false);
   // const [currentPage, setCurrentPage] = useState(null);
   // Obtenemos los querys pasados de la url para armar la paginación y los filtros
@@ -175,7 +177,11 @@ const SearchResults = (props) => {
     setTimeout(() => {
       setLoading(false);
     }, 0);
-  }, []);
+
+    return () => {
+      dispatch(clearPokemon());
+    };
+  }, [dispatch]);
 
   // Nos suscribimos al store para renderear el componente cada vez que tengamos un cambio
 
@@ -193,30 +199,30 @@ const SearchResults = (props) => {
   //   history.push({ search: `?${next ? next.split("?").pop() : ""}` });
   // }
 
-  function handleDesc(event) {
-    // Version 1
-    // if (location.search === "")
-    //   history.push({ search: `${location.search}order=DESC` });
-    // else if (!location.search.includes("order=DESC"))
-    //   history.push({ search: `${location.search}&order=DESC` });
-    // if (location.search.includes("order=ASC"))
-    //   history.push({
-    //     search: location.search.replace("order=ASC", "order=DESC"),
-    //   });
+  // function handleDesc(event) {
+  //   // Version 1
+  //   // if (location.search === "")
+  //   //   history.push({ search: `${location.search}order=DESC` });
+  //   // else if (!location.search.includes("order=DESC"))
+  //   //   history.push({ search: `${location.search}&order=DESC` });
+  //   // if (location.search.includes("order=ASC"))
+  //   //   history.push({
+  //   //     search: location.search.replace("order=ASC", "order=DESC"),
+  //   //   });
 
-    // Version 2
-    const orderQuery = querys.get("sort");
-    if (orderQuery) querys.set("sort", "DESC");
-    else querys.append("sort", "DESC");
-    history.push({ search: querys.toString() });
-  }
+  //   // Version 2
+  //   const orderQuery = querys.get("sort");
+  //   if (orderQuery) querys.set("sort", "DESC");
+  //   else querys.append("sort", "DESC");
+  //   history.push({ search: querys.toString() });
+  // }
 
-  function handleAsc(event) {
-    const orderQuery = querys.get("sort");
-    if (orderQuery) querys.set("sort", "ASC");
-    else querys.append("sort", "ASC");
-    history.push({ search: querys.toString() });
-  }
+  // function handleAsc(event) {
+  //   const orderQuery = querys.get("sort");
+  //   if (orderQuery) querys.set("sort", "ASC");
+  //   else querys.append("sort", "ASC");
+  //   history.push({ search: querys.toString() });
+  // }
 
   function handleOrderBy(value) {
     // VERSION 1
@@ -496,18 +502,19 @@ const SearchResults = (props) => {
                 {pokemons.map((pokemon) => (
                   <Pokemons key={pokemon.id} data={pokemon} />
                 ))}
+
+                <Pagination
+                  totalRecords={count}
+                  pageLimit={currentLimit}
+                  pageNeighbours={1}
+                  currentPage={currentPage}
+                  prev={prev}
+                  next={next}
+                  history={history}
+                  querys={querys}
+                />
               </div>
             )}
-            <Pagination
-              totalRecords={count}
-              pageLimit={currentLimit}
-              pageNeighbours={1}
-              currentPage={currentPage}
-              prev={prev}
-              next={next}
-              history={history}
-              querys={querys}
-            />
           </section>
         </SearchSection>
       </>

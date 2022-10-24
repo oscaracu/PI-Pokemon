@@ -3,6 +3,7 @@ export const CATCH_EM_ALL = "CATCH_EM_ALL";
 export const CLEAR_POKEMON = "CLEAR_POKEMON";
 export const GET_TYPES = "GET_TYPES";
 export const GET_POKEMON = "GET_POKEMON";
+export const CLEAR_POKEMONS = "CLEAR_POKEMONS";
 
 const host = "localhost:3001";
 
@@ -31,6 +32,9 @@ export const getPokemon = (id) => (dispatch) => {
 
 export const clearPokemon = () => (dispatch) =>
   dispatch({ type: CLEAR_POKEMON });
+
+export const clearPokemons = () => (dispatch) =>
+  dispatch({ type: CLEAR_POKEMONS });
 
 // Candidatos a ser eliminados
 

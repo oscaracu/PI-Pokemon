@@ -2,6 +2,7 @@ import {
   CATCH_EM_ALL,
   GET_POKEMON,
   CLEAR_POKEMON,
+  CLEAR_POKEMONS,
   GET_TYPES,
   // PREV_OR_NEXT,
 } from "../actions";
@@ -41,6 +42,13 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         pokemon: {},
       };
+
+    case CLEAR_POKEMONS:
+      return {
+        ...state,
+        pokemons: {},
+      };
+
     // case PREV_OR_NEXT:
     //   return {
     //     ...state,
