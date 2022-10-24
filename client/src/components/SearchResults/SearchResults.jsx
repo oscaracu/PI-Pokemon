@@ -13,6 +13,17 @@ const SearchSection = styled.section`
   color: #2c3e50;
   font-family: "Fredoka", sans-serif;
 
+  .results {
+    font-family: "Signika", sans-serif;
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-evenly;
+      align-items: flex-start;
+    }
+  }
+
   .filters {
     display: flex;
     justify-content: space-evenly;
@@ -456,6 +467,22 @@ const SearchResults = (props) => {
           Next
           </button>
         </div> */}
+          {/* Render de resultados de busqueda */}
+
+          <section className="results">
+            <div>
+              {count === 0 ? (
+                <NotFound />
+              ) : (
+                <div className="container">
+                  {pokemons.map((pokemon) => (
+                    <Pokemons key={pokemon.id} data={pokemon} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+
           <div>
             <Pagination
               totalRecords={count}
@@ -467,19 +494,6 @@ const SearchResults = (props) => {
               history={history}
               querys={querys}
             />
-          </div>
-          {/* Render de resultados de busqueda */}
-
-          <div>
-            {count === 0 ? (
-              <NotFound />
-            ) : (
-              <>
-                {pokemons.map((pokemon) => (
-                  <Pokemons key={pokemon.id} data={pokemon} />
-                ))}
-              </>
-            )}
           </div>
         </SearchSection>
       </>
