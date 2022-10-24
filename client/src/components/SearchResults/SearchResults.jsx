@@ -22,6 +22,8 @@ const SearchSection = styled.section`
     font-family: "Signika", sans-serif;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
 
     .container {
       margin-top: 4em;
@@ -29,7 +31,7 @@ const SearchSection = styled.section`
       display: flex;
       flex-wrap: wrap;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: center;
       gap: 25px;
       align-items: stretch;
     }
@@ -496,9 +498,6 @@ const SearchResults = (props) => {
                 ))}
               </div>
             )}
-          </section>
-
-          <div>
             <Pagination
               totalRecords={count}
               pageLimit={currentLimit}
@@ -509,7 +508,7 @@ const SearchResults = (props) => {
               history={history}
               querys={querys}
             />
-          </div>
+          </section>
         </SearchSection>
       </>
     );

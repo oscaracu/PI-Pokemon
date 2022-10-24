@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 const LEFT_PAGE = "LEFT";
 const RIGHT_PAGE = "RIGHT";
 
@@ -14,6 +16,44 @@ const range = (from, to, step = 1) => {
 
   return range;
 };
+
+const PaginationDiv = styled.div`
+  font-family: "Fredoka", sans-serif;
+
+  nav {
+    margin: 50px auto;
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+
+      .active {
+        background-color: #2980b9;
+        color: #ecf0f1;
+      }
+
+      button {
+        color: #2980b9;
+        border: none;
+        background-color: #ecf0f1;
+        font-family: inherit;
+        font-weight: 500;
+        font-size: 1.25em;
+        padding: 8px 16px;
+
+        :hover {
+          background-color: #2980b9;
+          color: #ecf0f1;
+        }
+      }
+    }
+  }
+`;
 
 const Pagination = (props) => {
   //   const state = { currentPage: 1 };
@@ -121,7 +161,7 @@ const Pagination = (props) => {
   }
 
   return (
-    <>
+    <PaginationDiv>
       <nav>
         <ul>
           {pages.map((page, index) => {
@@ -148,11 +188,13 @@ const Pagination = (props) => {
             }
 
             return (
-              <li
-                key={index}
-                className={`page-item${currentPage === page ? "active" : ""}`}
-              >
-                <button className="page-link" onClick={handleClick(page)}>
+              <li key={index} className={"page-item"}>
+                <button
+                  className={`page-link ${
+                    currentPage === page ? "active" : ""
+                  }`}
+                  onClick={handleClick(page)}
+                >
                   {page}
                 </button>
               </li>
@@ -160,7 +202,7 @@ const Pagination = (props) => {
           })}
         </ul>
       </nav>
-    </>
+    </PaginationDiv>
   );
 };
 
