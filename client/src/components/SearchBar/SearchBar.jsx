@@ -1,104 +1,86 @@
 import { useState } from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-const SearchSection = styled.div`
+const SearchSection = styled.section`
+  background-image: url("http://localhost:3001/images/front/pikachu_01.png"),
+    url("http://localhost:3001/images/front/eevee_01.png"),
+    url("http://localhost:3001/images/front/main_bg.png");
+  background-size: contain, contain, cover;
+  background-position: -80px, right, bottom;
+  background-repeat: no-repeat;
+  height: 450px;
   color: #2c3e50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-  .top {
-    font-family: "Secular One", sans-serif;
-    background-image: url("http://localhost:3001/images/front/red_bg.jpg");
-    padding: 10px;
-    color: #ecf0f1;
+  h1 {
+    font-family: "Fredoka", sans-serif;
+    margin-bottom: 30px;
+    margin-top: -50px;
     text-align: center;
-    text-shadow: 2px 2px 5px black;
+    width: 50%;
+    font-size: 3.5em;
+    color: #ecf0f1;
+    text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
   }
 
-  nav {
-    background-color: #ecf0f1;
+  .container {
+    width: 50%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    background-color: #f1c40f;
+    /* background-image: url("http://localhost:3001/images/front/red_bg.jpg"); */
+    box-shadow: 0px 8px 16px #2c3e50;
 
-    .container {
-      font-family: "Signika", sans-serif;
-      width: 80%;
+    form {
+      width: 100%;
+      padding: 20px;
       display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      align-items: center;
-      margin: 15px auto;
+      gap: 15px;
+      font-family: "Fredoka", sans-serif;
 
-      div {
-        text-align: center;
-      }
+      button {
+        border: none;
+        font-family: "Signika", sans-serif;
+        font-size: 1.4em;
+        padding: 0 40px;
+        background-color: #e74c3c;
+        color: #ecf0f1;
+        text-shadow: 2px 2px 2px #2c3e50;
+        font-weight: 500;
 
-      .logo {
-        height: 80px;
-        width: auto;
-      }
-
-      .menu {
-        width: 60%;
-      }
-
-      .left,
-      .right {
-        width: 20%;
-
-        .btn {
-          text-decoration: none;
-          font-size: 1.6em;
-          color: #ecf0f1;
-          padding: 10px 20px;
-          border-radius: 20px;
-          background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
-          background-size: 250px;
-          text-shadow: 2px 2px 3px black;
-          box-shadow: 0px 2px 10px #7f8c8d;
-
-          &:hover {
-            background-image: url("http://localhost:3001/images/front/red_bg.jpg");
-            color: #ecf0f1;
-          }
+        :hover {
+          background-color: #c0392b;
         }
       }
 
-      ul {
-        font-size: 1.4em;
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        text-transform: uppercase;
-        /* font-weight: 600; */
-        color: #2980b9;
+      input {
+        width: 100%;
+        height: 40px;
+        border: none;
+        padding: 15px 15px;
+        font-size: 1.2em;
+        color: #2c3e50;
+        font-family: "Fredoka", sans-serif;
 
-        li {
-          border-right: 2px solid #bdc3c7;
-          padding: 7px 30px;
+        :focus {
+          border: none;
+          outline: 3px solid #f39c1299;
+        }
 
-          :last-child {
-            border-right: none;
-          }
-
-          a {
-            text-decoration: none;
-            color: #2980b9;
-
-            :hover {
-              color: #e74c3c;
-              font-weight: 500;
-            }
-          }
+        ::placeholder {
+          color: #95a5a6;
         }
       }
     }
   }
 `;
 
-const Nav = (props) => {
+const SearchBar = (props) => {
   const history = useHistory();
   const [search, setSearch] = useState("");
 
@@ -112,54 +94,23 @@ const Nav = (props) => {
   return (
     <>
       <SearchSection>
-        <header>
-          <div className="top">New pokemon are coming!</div>
-          <nav>
-            <div className="container">
-              <div className="left">
-                <img
-                  className="logo"
-                  src="http://localhost:3001/images/front/logo.png"
-                  alt="Logo Pokemon"
-                />
-              </div>
-              <div className="menu">
-                <ul>
-                  <li>
-                    <NavLink to={"/"}>Home</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to={"/pokemon"}>Pokemons</NavLink>
-                  </li>
-                  <li>About</li>
-                </ul>
-              </div>
-              <div className="right">
-                <NavLink className="btn" to={"/create"}>
-                  Create
-                </NavLink>
-              </div>
-            </div>
-          </nav>
-          <section className="search">
-            <div>
-              <form onSubmit={searchHandler}>
-                <input
-                  onChange={(event) => setSearch(event.target.value)}
-                  type="search"
-                  name="search"
-                  id="search"
-                  value={search}
-                  placeholder="Enter a Pokemon's name"
-                />
-                <button type="submit">Buscar</button>
-              </form>
-            </div>
-          </section>
-        </header>
+        <h1>What Pokemon are you looking for today?</h1>
+        <div className="container">
+          <form onSubmit={searchHandler}>
+            <input
+              onChange={(event) => setSearch(event.target.value)}
+              type="search"
+              name="search"
+              id="search"
+              value={search}
+              placeholder="Enter a Pokemon's name"
+            />
+            <button type="submit">Buscar</button>
+          </form>
+        </div>
       </SearchSection>
     </>
   );
 };
 
-export default Nav;
+export default SearchBar;

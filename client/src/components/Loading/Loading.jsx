@@ -96,36 +96,36 @@ const Loading = (props) => {
           src="http://localhost:3001/images/front/loading.gif"
           alt="Loading Pokeball"
         />
-        <section class="spinner-container">
-          <div class="spinner">
-            <span class="spinner__leter" letter="L">
+        <section className="spinner-container">
+          <div className="spinner">
+            <span className="spinner__leter" letter="L">
               L
             </span>
-            <span class="spinner__leter" letter="o">
+            <span className="spinner__leter" letter="o">
               o
             </span>
-            <span class="spinner__leter" letter="a">
+            <span className="spinner__leter" letter="a">
               a
             </span>
-            <span class="spinner__leter" letter="d">
+            <span className="spinner__leter" letter="d">
               d
             </span>
-            <span class="spinner__leter" letter="i">
+            <span className="spinner__leter" letter="i">
               i
             </span>
-            <span class="spinner__leter" letter="n">
+            <span className="spinner__leter" letter="n">
               n
             </span>
-            <span class="spinner__leter" letter="g">
+            <span className="spinner__leter" letter="g">
               g
             </span>
-            <span class="spinner__leter" letter=".">
+            <span className="spinner__leter" letter=".">
               .
             </span>
-            <span class="spinner__leter" letter=".">
+            <span className="spinner__leter" letter=".">
               .
             </span>
-            <span class="spinner__leter" letter=".">
+            <span className="spinner__leter" letter=".">
               .
             </span>
           </div>

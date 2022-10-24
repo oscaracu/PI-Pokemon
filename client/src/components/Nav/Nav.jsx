@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const Main = styled.div`
@@ -45,18 +45,18 @@ const Main = styled.div`
         width: 20%;
 
         .btn {
+          background-color: #3498db;
           text-decoration: none;
           font-size: 1.6em;
           color: #ecf0f1;
           padding: 10px 20px;
           border-radius: 20px;
-          background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
-          background-size: 250px;
+          background-size: 1200px;
           text-shadow: 2px 2px 3px black;
           box-shadow: 0px 2px 10px #7f8c8d;
 
           &:hover {
-            background-image: url("http://localhost:3001/images/front/red_bg.jpg");
+            background-color: #e74c3c;
             color: #ecf0f1;
           }
         }
@@ -106,11 +106,13 @@ const Nav = (props) => {
           <nav>
             <div className="container">
               <div className="left">
-                <img
-                  className="logo"
-                  src="http://localhost:3001/images/front/logo.png"
-                  alt="Logo Pokemon"
-                />
+                <Link to={"/"}>
+                  <img
+                    className="logo"
+                    src="http://localhost:3001/images/front/logo.svg"
+                    alt="Logo Pokemon"
+                  />
+                </Link>
               </div>
               <div className="menu">
                 <ul>

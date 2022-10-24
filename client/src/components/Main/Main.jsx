@@ -4,6 +4,7 @@ import Footer from "../Footer/Footer";
 import Nav from "../Nav/Nav";
 import Pokemon from "../Pokemon/Pokemon";
 import SearchResults from "../SearchResults/SearchResults";
+import SearchBar from "../SearchBar/SearchBar";
 
 const Main = (props) => {
   const { dispatch, useEffect } = props;
@@ -16,6 +17,7 @@ const Main = (props) => {
   return (
     <>
       <Nav />
+      <SearchBar />
       <Switch>
         <Route exact path={path}>
           <SearchResults />
