@@ -50,10 +50,9 @@ const Main = styled.div`
           font-size: 1.6em;
           color: #ecf0f1;
           padding: 10px 20px;
-          border-radius: 20px;
           background-size: 1200px;
           text-shadow: 2px 2px 3px black;
-          box-shadow: 0px 2px 10px #7f8c8d;
+          box-shadow: 0px 2px 10px #7f8c8d77;
 
           &:hover {
             background-color: #e74c3c;

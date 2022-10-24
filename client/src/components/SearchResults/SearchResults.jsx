@@ -12,15 +12,26 @@ import styled from "styled-components";
 const SearchSection = styled.section`
   color: #2c3e50;
   font-family: "Fredoka", sans-serif;
+  background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
+
+  background-color: #bdc3c7;
 
   .results {
+    background-color: #ecf0f1cc;
+    backdrop-filter: grayscale(100%);
     font-family: "Signika", sans-serif;
+    display: flex;
+    justify-content: center;
+
     .container {
+      margin-top: 4em;
+      width: 75%;
       display: flex;
       flex-wrap: wrap;
       flex-direction: row;
-      justify-content: space-evenly;
-      align-items: flex-start;
+      justify-content: space-between;
+      gap: 25px;
+      align-items: stretch;
     }
   }
 
@@ -280,6 +291,10 @@ const SearchResults = (props) => {
     history.push({ search: querys.toString() });
   }
 
+  function handleReset() {
+    history.push({ search: "" });
+  }
+
   ////////////////////////////////////////////////////////
   //
   //  1.- Agregar un render condicional cuando count sea 0 que muestre el mensaje: No se encontraron pokemons
@@ -451,7 +466,9 @@ const SearchResults = (props) => {
               </div>
 
               <div className="filter">
-                <button className="clear">Reset</button>
+                <button onClick={handleReset} className="clear">
+                  Reset
+                </button>
               </div>
             </div>
           </div>
@@ -470,17 +487,15 @@ const SearchResults = (props) => {
           {/* Render de resultados de busqueda */}
 
           <section className="results">
-            <div>
-              {count === 0 ? (
-                <NotFound />
-              ) : (
-                <div className="container">
-                  {pokemons.map((pokemon) => (
-                    <Pokemons key={pokemon.id} data={pokemon} />
-                  ))}
-                </div>
-              )}
-            </div>
+            {count === 0 ? (
+              <NotFound />
+            ) : (
+              <div className="container">
+                {pokemons.map((pokemon) => (
+                  <Pokemons key={pokemon.id} data={pokemon} />
+                ))}
+              </div>
+            )}
           </section>
 
           <div>
