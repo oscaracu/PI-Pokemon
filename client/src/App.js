@@ -6,7 +6,7 @@ import CreatePokemon from "./components/CreatePokemon/CreatePokemon";
 import PageNotFound404 from "./components/PageNotFound404/PageNotFound404";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getAllPokemons } from "./redux/actions";
+import { getAllPokemons, getTypes } from "./redux/actions";
 import Loading from "./components/Loading/Loading";
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getAllPokemons(search ? search : ""));
+    dispatch(getTypes());
   }, [dispatch, search]);
 
   const { count } = useSelector((state) => state);
