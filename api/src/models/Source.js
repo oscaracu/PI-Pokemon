@@ -11,12 +11,12 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          notNums(value) {
-            if (!/^[a-zA-Z \-]+$/.test(value))
-              throw new Error("The name should not have numbers");
-          },
-        },
+        // validate: {
+        //   notNums(value) {
+        //     if (!/^[a-zA-Z \-]+$/.test(value))
+        //       throw new Error("The name should not have numbers");
+        //   },
+        // },
         set(value) {
           this.setDataValue(
             "name",
