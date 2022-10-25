@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Pokemons from "../Pokemons/Pokemons";
-import { useSelector } from "react-redux";
-// import { getAllPokemons, getTypes } from "../../redux/actions";
+// import { useSelector } from "react-redux";
+import { getAllPokemons, getTypes } from "../../redux/actions";
 import { useLocation, useHistory } from "react-router-dom";
 import PageNotFound404 from "../PageNotFound404/PageNotFound404";
 import Pagination from "../Pagination/Pagination";
@@ -146,11 +146,12 @@ const SearchSection = styled.section`
 `;
 
 const SearchResults = (props) => {
-  const { dispatch } = props;
+  const { dispatch, useEffect, useSelector } = props;
   const [loading, setLoading] = useState(false);
   // const [currentPage, setCurrentPage] = useState(null);
   // Obtenemos los querys pasados de la url para armar la paginación y los filtros
   const location = useLocation();
+  console.log(location);
   const history = useHistory();
   const querys = new URLSearchParams(location.search);
 
@@ -172,20 +173,29 @@ const SearchResults = (props) => {
   // const dispatch = useDispatch();
   useEffect(() => {
     setLoading(true);
-    // dispatch(getAllPokemons(location.search));
-    // dispatch(getTypes());
+    dispatch(getAllPokemons(location.search));
     setTimeout(() => {
       setLoading(false);
     }, 0);
-
-    return () => {
-      dispatch(clearPokemon());
-    };
-  }, [dispatch]);
+  }, [dispatch, location]);
 
   // Nos suscribimos al store para renderear el componente cada vez que tengamos un cambio
 
-  const { pokemons, prev, next, count, types } = useSelector((state) => state);
+  const { pokemons, prev, next, count, types, pokemon } = useSelector(
+    (state) => state
+  );
+
+  useEffect(() => {
+    if (types.length === 0) {
+      dispatch(getTypes());
+    }
+  }, [dispatch, types]);
+
+  useEffect(() => {
+    if (Object.keys(pokemon).length > 0) {
+      dispatch(clearPokemon());
+    }
+  }, [dispatch, pokemon]);
 
   /////////////////////////////////////////////////
   // Declaramos nuestros handlers para cada filtro

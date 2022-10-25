@@ -5,14 +5,19 @@ import Nav from "../Nav/Nav";
 import Pokemon from "../Pokemon/Pokemon";
 import SearchResults from "../SearchResults/SearchResults";
 import SearchBar from "../SearchBar/SearchBar";
+// import { getAllPokemons, getTypes } from "../../redux/actions";
 
 const Main = (props) => {
-  const { dispatch } = props;
+  // const { search } = useLocation();
+
+  const { dispatch, useEffect, useSelector } = props;
 
   let { path } = useRouteMatch();
+
   // useEffect(() => {
+  //   dispatch(getAllPokemons(search ? search : ""));
   //   dispatch(getTypes());
-  // }, [dispatch]);
+  // }, [dispatch, search]);
 
   return (
     <>
@@ -20,7 +25,11 @@ const Main = (props) => {
       <SearchBar />
       <Switch>
         <Route exact path={path}>
-          <SearchResults dispatch={dispatch} />
+          <SearchResults
+            dispatch={dispatch}
+            useEffect={useEffect}
+            useSelector={useSelector}
+          />
         </Route>
         <Route path={`${path}/:id`}>
           <Pokemon />

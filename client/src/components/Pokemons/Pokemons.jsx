@@ -1,4 +1,4 @@
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Cards = styled.div`
@@ -284,12 +284,11 @@ const Cards = styled.div`
 `;
 
 const Pokemons = (props) => {
-  const { url } = useRouteMatch();
   const { id, name, image, types } = props.data;
   return (
     <Cards>
       <div className="card-header">
-        <Link to={`${url}/${id}`}>
+        <Link to={`/pokemon/${id}`}>
           <img src={image} alt={name} />
         </Link>
       </div>

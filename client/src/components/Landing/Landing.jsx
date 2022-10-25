@@ -79,11 +79,11 @@ const Landing = (props) => {
     }
   }, [count, dispatch, randomPokemon]);
 
-  const { id, image } = useSelector((state) => state.pokemon);
+  const { image } = useSelector((state) => state.pokemon);
 
-  // if (!randomPokemon.isSet) {
-  //   return <Loading />;
-  // } else {
+  if (!randomPokemon.isSet) {
+    return <Loading />;
+  }
 
   const bigImage = {
     backgroundImage: "url(" + image + ")",
@@ -91,14 +91,9 @@ const Landing = (props) => {
 
   return (
     <>
-      {!randomPokemon.isSet ? <Loading /> : ""}
       <Box>
         <div className="container">
-          <div className="big-pokemon" style={bigImage}>
-            {/* <div>
-            <img src={image} alt="Who is that Pokemon?" />
-          </div> */}
-          </div>
+          <div className="big-pokemon" style={bigImage}></div>
           <div>
             <div>
               <img

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-// import { getTypes } from "../../redux/actions";
+import { getTypes } from "../../redux/actions";
 import Footer from "../Footer/Footer";
 import Nav from "../Nav/Nav";
 import TypesCheckBox from "../TypesCheckbox/TypesCheckBox";
@@ -257,6 +256,8 @@ const CreateSection = styled.section`
 `;
 
 const CreatePokemon = (props) => {
+  const { dispatch, useEffect, useSelector } = props;
+
   const history = useHistory();
   // Creamos en estado para el formulario controlado
   const [errors, setErrors] = useState({});
@@ -266,11 +267,11 @@ const CreatePokemon = (props) => {
   // const dispatch = useDispatch();
   const { types } = useSelector((state) => state);
 
-  // useEffect(() => {
-  //   if (types.length === 0) {
-  //     dispatch(getTypes());
-  //   }
-  // }, [dispatch, types]);
+  useEffect(() => {
+    if (types.length === 0) {
+      dispatch(getTypes());
+    }
+  }, [dispatch, types]);
 
   function handleChange(event) {
     const { name, value } = event.target;
