@@ -3,7 +3,7 @@ import Pokemons from "../Pokemons/Pokemons";
 // import { useSelector } from "react-redux";
 import { getAllPokemons, getTypes } from "../../redux/actions";
 import { useLocation, useHistory } from "react-router-dom";
-import PageNotFound404 from "../PageNotFound404/PageNotFound404";
+// import PageNotFound404 from "../PageNotFound404/PageNotFound404";
 import Pagination from "../Pagination/Pagination";
 import NotFound from "../NotFound/NotFound";
 import Loading from "../Loading/Loading";
@@ -151,7 +151,6 @@ const SearchResults = (props) => {
   // const [currentPage, setCurrentPage] = useState(null);
   // Obtenemos los querys pasados de la url para armar la paginación y los filtros
   const location = useLocation();
-  console.log(location);
   const history = useHistory();
   const querys = new URLSearchParams(location.search);
 
@@ -506,7 +505,7 @@ const SearchResults = (props) => {
 
           <section className="results">
             {count === 0 ? (
-              <NotFound />
+              <NotFound message="No pokemon found!" />
             ) : (
               <div className="container">
                 {pokemons.map((pokemon) => (
@@ -516,7 +515,7 @@ const SearchResults = (props) => {
                 <Pagination
                   totalRecords={count}
                   pageLimit={currentLimit}
-                  pageNeighbours={1}
+                  pageNeighbours={2}
                   currentPage={currentPage}
                   prev={prev}
                   next={next}
@@ -530,7 +529,7 @@ const SearchResults = (props) => {
       </>
     );
   } catch (error) {
-    return <PageNotFound404 />;
+    return <NotFound message={error.message} />;
   }
 };
 

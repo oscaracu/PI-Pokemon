@@ -281,7 +281,6 @@ const CreatePokemon = (props) => {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(inputs);
     fetch("http://localhost:3001/pokemons", {
       method: "POST",
       headers: {
@@ -291,7 +290,6 @@ const CreatePokemon = (props) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
         history.push(`/pokemon/${data.id}`);
       })
       .catch((error) => {
@@ -301,22 +299,17 @@ const CreatePokemon = (props) => {
     setInputs({});
     setSelectedFile();
     setIsFilePicked(false);
-
-    console.log(inputs);
   }
 
   function handleImageLoad(event) {
     const formData = new FormData();
     formData.append("img", event.target.files[0]);
-    console.log(event.target.files[0]);
     fetch("http://localhost:3001/pokemons/upload", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.json())
-      .then((result) => {
-        console.log("Success:", result);
-      })
+      .then((result) => {})
       .catch((error) => {
         console.error("Error:", error);
       });
@@ -347,7 +340,7 @@ const CreatePokemon = (props) => {
                 />
                 {/* /// Input de archivo de imagen */}
                 {/* <!--ESTILO 1--> */}
-                <div class="container-input">
+                <div className="container-input">
                   <input
                     className="inputfile inputfile-1"
                     type="file"
@@ -356,17 +349,17 @@ const CreatePokemon = (props) => {
                     onChange={handleImageLoad}
                   />
 
-                  <label for="img">
+                  <label htmlFor="img">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="iborrainputfile"
+                      className="iborrainputfile"
                       width="20"
                       height="17"
                       viewBox="0 0 20 17"
                     >
                       <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path>
                     </svg>
-                    <span class="iborrainputfile">Select Image</span>
+                    <span className="iborrainputfile">Select Image</span>
                   </label>
                 </div>
               </div>

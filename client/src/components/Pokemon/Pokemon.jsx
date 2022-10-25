@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { clearPokemon, getPokemon } from "../../redux/actions";
 import Loading from "../Loading/Loading";
-import PageNotFound404 from "../PageNotFound404/PageNotFound404";
 import styled from "styled-components";
+import NotFound from "../NotFound/NotFound";
 
 const PokemonSection = styled.section`
   color: #2c3e50;
@@ -446,7 +446,7 @@ const Pokemon = (props) => {
   }
 
   if (isNaN(id)) {
-    return <PageNotFound404 />;
+    return <NotFound message="Page Not Found!" />;
   } else if (loading) {
     return <Loading />;
   }
