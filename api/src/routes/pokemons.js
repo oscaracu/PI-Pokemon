@@ -256,10 +256,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    if (isNaN(id))
-      throw new Error(
-        "a number is required as a route parameter, for names use a query /?name=something"
-      );
+    if (isNaN(id)) throw new Error("a number id is required");
     const dbResponse = await Source.findByPk(parseInt(id), { include: Type });
     const totalRecords = await Source.count();
 

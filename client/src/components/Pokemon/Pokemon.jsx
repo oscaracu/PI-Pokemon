@@ -29,9 +29,11 @@ const PokemonSection = styled.section`
       margin: 3em;
       display: flex;
       flex-direction: row;
+      gap: 20px;
 
       h2 {
         margin: 0;
+        margin-bottom: 8px;
         font-family: "Fredoka", sans-serif;
         font-size: 4em;
         color: #2980b9;
@@ -394,6 +396,9 @@ const PokemonSection = styled.section`
         :hover {
           color: #f1c40f;
         }
+        :disabled {
+          visibility: hidden;
+        }
       }
 
       .back {
@@ -437,6 +442,7 @@ const Pokemon = (props) => {
     height,
     weight,
     totalRecords,
+    error,
   } = useSelector((state) => state.pokemon);
 
   function prevBtnHandle() {
@@ -447,8 +453,8 @@ const Pokemon = (props) => {
     history.push(`/pokemon/${parseInt(id) + 1}`);
   }
 
-  if (isNaN(id)) {
-    return <NotFound message="Page Not Found!" />;
+  if (error) {
+    return <NotFound message={error} />;
   } else if (loading) {
     return <Loading />;
   }
@@ -485,7 +491,7 @@ const Pokemon = (props) => {
             ◄ Prev
           </button>
 
-          <button className="back" onClick={() => history.goBack()}>
+          <button className="back" onClick={() => history.push("/pokemon")}>
             Back
           </button>
           <button
@@ -507,7 +513,7 @@ const Pokemon = (props) => {
               </h2>
               <ul className="types">
                 {types.map((type) => (
-                  <li className={type.name} key={type.id}>
+                  <li className={type.name.toLowerCase()} key={type.id}>
                     {type.name.toUpperCase()}
                   </li>
                 ))}

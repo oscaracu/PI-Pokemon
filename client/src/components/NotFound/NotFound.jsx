@@ -4,7 +4,7 @@ const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
 
 export const NotFoundStyle = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   text-align: center;
   font-family: "Fredoka One", cursive;
   font-size: 2em;
@@ -14,7 +14,7 @@ export const NotFoundStyle = styled.div`
   align-items: center;
 
   .error-container {
-    width: 75%;
+    width: 100%;
     padding: 40px;
     background-color: #ecf0f1;
 

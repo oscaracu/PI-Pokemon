@@ -6,6 +6,7 @@ const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
 const Cards = styled.div`
   box-sizing: border-box;
   width: 23%;
+  min-width: 230px;
   background-color: #ecf0f1;
   padding: 15px;
 
@@ -16,7 +17,7 @@ const Cards = styled.div`
   }
 
   .number {
-    margin-top: -25px;
+    /* margin-top: -25px; */
     font-size: 4em;
     color: #95a5a6;
   }

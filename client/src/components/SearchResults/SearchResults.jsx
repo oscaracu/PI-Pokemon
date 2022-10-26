@@ -28,7 +28,8 @@ const SearchSection = styled.section`
     align-items: center;
     flex-direction: column;
 
-    .container {
+    .container,
+    .cards {
       margin: 3em;
       width: 75%;
       display: flex;
@@ -37,6 +38,11 @@ const SearchSection = styled.section`
       justify-content: center;
       gap: 25px;
       align-items: stretch;
+    }
+
+    .cards {
+      width: unset;
+      margin: unset;
     }
   }
 
@@ -298,8 +304,13 @@ const SearchResults = (props) => {
 
   function handleShow(value) {
     const typeQuery = querys.get("show");
-    if (typeQuery) querys.set("show", value);
-    else querys.append("show", value);
+    if (typeQuery) {
+      querys.set("show", value);
+      querys.set("offset", 0);
+    } else {
+      querys.append("show", value);
+      querys.set("offset", 0);
+    }
     history.push({ search: querys.toString() });
   }
 
@@ -510,20 +521,24 @@ const SearchResults = (props) => {
               <NotFound message="No pokemon found!" />
             ) : (
               <div className="container">
-                {pokemons.map((pokemon) => (
-                  <Pokemons key={pokemon.id} data={pokemon} />
-                ))}
+                <div className="cards">
+                  {pokemons.map((pokemon) => (
+                    <Pokemons key={pokemon.id} data={pokemon} />
+                  ))}
+                </div>
 
-                <Pagination
-                  totalRecords={count}
-                  pageLimit={currentLimit}
-                  pageNeighbours={2}
-                  currentPage={currentPage}
-                  prev={prev}
-                  next={next}
-                  history={history}
-                  querys={querys}
-                />
+                <div className="pagination">
+                  <Pagination
+                    totalRecords={count}
+                    pageLimit={currentLimit}
+                    pageNeighbours={2}
+                    currentPage={currentPage}
+                    prev={prev}
+                    next={next}
+                    history={history}
+                    querys={querys}
+                  />
+                </div>
               </div>
             )}
           </section>

@@ -282,13 +282,18 @@ const CreatePokemon = (props) => {
   }
 
   function handleSubmit(event) {
+    const body = {
+      ...inputs,
+      weight: inputs.weight * 10,
+      height: inputs.height / 10,
+    };
     event.preventDefault();
     fetch(`${baseUrl}/pokemons`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(inputs),
+      body: JSON.stringify(body),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -548,13 +553,13 @@ export function validate(inputs) {
   }
 
   if (!inputs.height) {
-    errors.height = "Height is required";
+    errors.height = "Height in centimeters is required";
   } else if (inputs.height < 0 || inputs.height > 1000) {
     errors.height = "Height must be greater than 0 and less than 1000";
   }
 
   if (!inputs.weight) {
-    errors.height = "Weight is required";
+    errors.height = "Weight in kg is required";
   } else if (inputs.weight < 0 || inputs.weight > 1000) {
     errors.height = "Weight must be greater than 0 and less than 1000";
   }
