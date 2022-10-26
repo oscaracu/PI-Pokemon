@@ -4,6 +4,8 @@ import { getPokemon } from "../../redux/actions";
 import styled from "styled-components";
 import Loading from "../Loading/Loading";
 
+const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+
 const Box = styled.div`
   box-sizing: border-box;
   width: 100vw;
@@ -12,7 +14,7 @@ const Box = styled.div`
   justify-content: center;
   align-items: center;
   background-color: white;
-  background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
+  background-image: url(${baseUrl}+"/images/front/blue_bg.jpg");
   background-repeat: repeat-x;
   background-size: 50% 50%;
   background-position: center center;
@@ -96,10 +98,7 @@ const Landing = (props) => {
           <div className="big-pokemon" style={bigImage}></div>
           <div>
             <div>
-              <img
-                src="http://localhost:3001/images/front/logo.svg"
-                alt="Pokemon"
-              />
+              <img src={baseUrl + "/images/front/logo.svg"} alt="Pokemon" />
             </div>
             <div>
               <Link className="btn" to={"/pokemon"}>

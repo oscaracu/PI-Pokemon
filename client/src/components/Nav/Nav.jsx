@@ -1,12 +1,14 @@
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
+const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+
 const Main = styled.div`
   color: #2c3e50;
 
   .top {
     font-family: "Secular One", sans-serif;
-    background-image: url("http://localhost:3001/images/front/red_bg.jpg");
+    background-image: url(${baseUrl}+"/images/front/red_bg.jpg");
     padding: 10px;
     color: #ecf0f1;
     text-align: center;
@@ -108,7 +110,7 @@ const Nav = (props) => {
                 <Link to={"/"}>
                   <img
                     className="logo"
-                    src="http://localhost:3001/images/front/logo.svg"
+                    src={baseUrl + "/images/front/logo.svg"}
                     alt="Logo Pokemon"
                   />
                 </Link>

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+
 export const NotFoundStyle = styled.div`
   width: 100%;
   height: 100vh;
@@ -34,7 +36,7 @@ const NotFound = (props) => {
       <div className="error-container">
         <img
           className="not-found"
-          src="http://localhost:3001/images/front/not_found.png"
+          src={baseUrl + "/images/front/not_found.png"}
           alt="Not found"
         />
         <h1>{message}</h1>

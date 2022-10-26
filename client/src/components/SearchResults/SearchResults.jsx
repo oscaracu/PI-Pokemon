@@ -10,10 +10,12 @@ import Loading from "../Loading/Loading";
 import styled from "styled-components";
 import { clearPokemon } from "../../redux/actions";
 
+const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+
 const SearchSection = styled.section`
   color: #2c3e50;
   font-family: "Fredoka", sans-serif;
-  background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
+  background-image: url(${baseUrl}+"/images/front/blue_bg.jpg");
 
   background-color: #bdc3c7;
 
@@ -42,7 +44,7 @@ const SearchSection = styled.section`
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-image: url("http://localhost:3001/images/front/blue_bg.jpg");
+    background-image: url(${baseUrl}+"/images/front/blue_bg.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

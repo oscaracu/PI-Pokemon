@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+
 const LoadDiv = styled.div`
   width: 100vw;
   height: 100vh;
@@ -93,7 +95,7 @@ const Loading = (props) => {
     <LoadDiv>
       <div className="container">
         <img
-          src="http://localhost:3001/images/front/loading.gif"
+          src={baseUrl + "/images/front/loading.gif"}
           alt="Loading Pokeball"
         />
         <section className="spinner-container">
