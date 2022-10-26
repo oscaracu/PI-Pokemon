@@ -4,6 +4,7 @@ import { getPokemon } from "../../redux/actions";
 import styled from "styled-components";
 import Loading from "../Loading/Loading";
 
+// const baseUrl = "http://localhost:3001";
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
 
 const Box = styled.div`

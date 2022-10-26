@@ -6,6 +6,7 @@ export const GET_POKEMON = "GET_POKEMON";
 export const CLEAR_POKEMONS = "CLEAR_POKEMONS";
 
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+// const baseUrl = "http://localhost:3001";
 
 export const getAllPokemons =
   (search = "") =>

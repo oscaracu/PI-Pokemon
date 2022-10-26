@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
+// const baseUrl = "http://localhost:3001";
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
 
 const SearchSection = styled.section`

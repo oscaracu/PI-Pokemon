@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+// const baseUrl = "http://localhost:3001";
 
 const Main = styled.div`
   color: #2c3e50;

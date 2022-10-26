@@ -7,6 +7,7 @@ import styled from "styled-components";
 import NotFound from "../NotFound/NotFound";
 
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+// const baseUrl = "http://localhost:3001";
 
 const PokemonSection = styled.section`
   color: #2c3e50;

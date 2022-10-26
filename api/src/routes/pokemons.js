@@ -323,7 +323,7 @@ router.get("/:id", async (req, res) => {
 /////////////
 
 router.post("/", async (req, res) => {
-  const imagesUrl = `https://${req.hostname}/images/`;
+  const imagesUrl = `https://${req.hostname}/images`;
   const { name, hp, attack, defense, speed, height, weight, types } = req.body;
   try {
     /////////////////////////////////////////////////////////////////////////////////////
@@ -386,7 +386,7 @@ router.post("/", async (req, res) => {
         .map((word) => `${word.toLowerCase()}`)
         .join("_");
       await store.currentImg.mv(
-        `./src/public/images/${fileName}.${fileExt}`,
+        `./src/public/images/pokemons/${fileName}.${fileExt}`,
         (err) => {
           if (err) throw new Error("image file upload failed");
         }
@@ -397,8 +397,8 @@ router.post("/", async (req, res) => {
     const newPokemon = {
       name,
       image: store.currentImg
-        ? `${imagesUrl}${store.currentFilename}`
-        : `${imagesUrl}default.png`,
+        ? `${imagesUrl}/pokemons/${store.currentFilename}`
+        : `${imagesUrl}/default.png`,
       hp,
       attack,
       defense,
@@ -413,8 +413,8 @@ router.post("/", async (req, res) => {
     const dbSource = await Source.create({
       name,
       image: store.currentImg
-        ? `${imagesUrl}${store.currentFilename}`
-        : `${imagesUrl}default.png`,
+        ? `${imagesUrl}/pokemons/${store.currentFilename}`
+        : `${imagesUrl}/default.png`,
       attack,
     });
     await dbSource.setPokemon(dbPokemon);
@@ -475,7 +475,7 @@ router.post("/upload", async (req, res) => {
 
 router.put("/", async (req, res) => {
   // Definimos una ruta para las imagenes
-  const imagesUrl = `https://${req.hostname}/images/`;
+  const imagesUrl = `https://${req.hostname}/images`;
 
   // Almacenamos en variables los datos pasados por body
   const { id, name, hp, attack, defense, speed, height, weight, types } =
@@ -497,7 +497,7 @@ router.put("/", async (req, res) => {
       // Antes de actualizar la imagen se obtienen los datos del objeto anterior
       const oldPokemonData = currentSource;
       const oldFileName = oldPokemonData.image.split("/").pop();
-      const oldImagePath = `./src/public/images/${oldFileName}`;
+      const oldImagePath = `./src/public/images/pokemons/${oldFileName}`;
       const oldName = oldPokemonData.name;
       if (!name) {
         //Si se carga un archivo nuevo pero no se recibe name, se usa el name anterior
@@ -506,7 +506,7 @@ router.put("/", async (req, res) => {
           .map((word) => `${word.toLowerCase()}`)
           .join("_");
         await store.currentImg.mv(
-          `./src/public/images/${fileName}.${fileExt}`,
+          `./src/public/images/pokemons/${fileName}.${fileExt}`,
           (err) => {
             if (err) throw new Error("image file upload failed");
           }
@@ -519,7 +519,7 @@ router.put("/", async (req, res) => {
           .map((word) => `${word.toLowerCase()}`)
           .join("_");
         await store.currentImg.mv(
-          `./src/public/images/${fileName}.${fileExt}`,
+          `./src/public/images/pokemons/${fileName}.${fileExt}`,
           (err) => {
             if (err) throw new Error("image file upload failed");
           }
@@ -534,8 +534,8 @@ router.put("/", async (req, res) => {
     const newPokemonData = {
       name,
       image: store.currentImg
-        ? `${imagesUrl}${store.currentFilename}`
-        : `${imagesUrl}default.png`,
+        ? `${imagesUrl}/pokemons/${store.currentFilename}`
+        : `${imagesUrl}/default.png`,
       hp,
       attack,
       defense,
@@ -597,7 +597,7 @@ router.delete("/", async (req, res) => {
     // Eliminamos la imagen del pokemon
     const oldPokemonData = currentSource;
     const oldFileName = oldPokemonData.image.split("/").pop();
-    const oldImagePath = `./src/public/images/${oldFileName}`;
+    const oldImagePath = `./src/public/images/pokemons/${oldFileName}`;
     if (oldFileName !== "default.png") {
       fs.unlinkSync(oldImagePath);
     }

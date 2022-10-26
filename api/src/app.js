@@ -18,6 +18,7 @@ server.use(
   fileUpload({
     limits: { fileSize: 50 * 1024 * 1024 },
     abortOnLimit: true,
+    createParentPath: true,
   })
 );
 

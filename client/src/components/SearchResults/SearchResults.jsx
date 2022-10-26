@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { clearPokemon } from "../../redux/actions";
 
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+// const baseUrl = "http://localhost:3001";
 
 const SearchSection = styled.section`
   color: #2c3e50;
@@ -41,7 +42,7 @@ const SearchSection = styled.section`
     }
 
     .cards {
-      width: unset;
+      width: 100%;
       margin: unset;
     }
   }

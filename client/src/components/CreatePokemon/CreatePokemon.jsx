@@ -7,6 +7,7 @@ import TypesCheckBox from "../TypesCheckbox/TypesCheckBox";
 import styled from "styled-components";
 
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+// const baseUrl = "http://localhost:3001";
 
 const CreateSection = styled.section`
   box-sizing: border-box;

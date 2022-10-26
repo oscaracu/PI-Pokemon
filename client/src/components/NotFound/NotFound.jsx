@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+// const baseUrl = "http://localhost:3001";
 
 export const NotFoundStyle = styled.div`
   width: 100%;
