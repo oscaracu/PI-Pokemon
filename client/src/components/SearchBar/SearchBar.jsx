@@ -5,9 +5,9 @@ import styled from "styled-components";
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
 
 const SearchSection = styled.section`
-  background-image: url(${baseUrl}+"/images/front/pikachu_01.png"),
-    url(${baseUrl}+"/images/front/eevee_01.png"),
-    url(${baseUrl}+"/images/front/main_bg.png");
+  background-image: url(${baseUrl}/images/front/pikachu_01.png),
+    url(${baseUrl}/images/front/eevee_01.png),
+    url(${baseUrl}/images/front/main_bg.png);
   background-size: contain, contain, cover;
   background-position: -80px, right, bottom;
   background-repeat: no-repeat;

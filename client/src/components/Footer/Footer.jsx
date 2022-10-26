@@ -4,7 +4,7 @@ const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
 
 const StyledFooter = styled.footer`
   font-family: "Secular One", sans-serif;
-  background-image: url(${baseUrl}+"/images/front/red_bg.jpg");
+  background-image: url(${baseUrl}/images/front/red_bg.jpg);
   padding: 5px;
   color: #ecf0f1;
   text-align: center;

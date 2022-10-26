@@ -8,7 +8,7 @@ const Main = styled.div`
 
   .top {
     font-family: "Secular One", sans-serif;
-    background-image: url(${baseUrl}+"/images/front/red_bg.jpg");
+    background-image: url(${baseUrl}/images/front/red_bg.jpg);
     padding: 10px;
     color: #ecf0f1;
     text-align: center;

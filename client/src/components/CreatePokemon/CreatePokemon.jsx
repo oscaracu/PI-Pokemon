@@ -12,7 +12,7 @@ const CreateSection = styled.section`
   box-sizing: border-box;
   color: #34495e;
   font-family: "Fredoka", sans-serif;
-  background-image: url(${baseUrl}+"/images/front/blue_bg.jpg");
+  background-image: url(${baseUrl}/images/front/blue_bg.jpg);
 
   /* div {
     border: 1px solid black;
@@ -33,7 +33,7 @@ const CreateSection = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(${baseUrl}+"/images/front/blue_bg.jpg");
+    background-image: url(${baseUrl}/images/front/blue_bg.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

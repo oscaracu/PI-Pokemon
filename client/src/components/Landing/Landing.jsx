@@ -14,7 +14,7 @@ const Box = styled.div`
   justify-content: center;
   align-items: center;
   background-color: white;
-  background-image: url(${baseUrl}+"/images/front/blue_bg.jpg");
+  background-image: url(${baseUrl}/images/front/blue_bg.jpg);
   background-repeat: repeat-x;
   background-size: 50% 50%;
   background-position: center center;
