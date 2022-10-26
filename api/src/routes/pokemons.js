@@ -20,7 +20,7 @@ const store = { currentImg: null, currentFilename: null };
 router.get("/", async (req, res) => {
   const { name, offset, limit, sort, orderBy, type, show } = req.query;
   // Almacenamos la url base en una constante
-  const currentUrl = `http://${req.hostname}:3001${req.baseUrl}/`;
+  const currentUrl = `https://${req.hostname}${req.baseUrl}/`;
 
   try {
     // En esta seccion se procesan los request por query
@@ -326,7 +326,7 @@ router.get("/:id", async (req, res) => {
 /////////////
 
 router.post("/", async (req, res) => {
-  const imagesUrl = `http://${req.hostname}:3001/images/`;
+  const imagesUrl = `https://${req.hostname}/images/`;
   const { name, hp, attack, defense, speed, height, weight, types } = req.body;
   try {
     /////////////////////////////////////////////////////////////////////////////////////
@@ -478,7 +478,7 @@ router.post("/upload", async (req, res) => {
 
 router.put("/", async (req, res) => {
   // Definimos una ruta para las imagenes
-  const imagesUrl = `http://${req.hostname}:3001/images/`;
+  const imagesUrl = `https://${req.hostname}/images/`;
 
   // Almacenamos en variables los datos pasados por body
   const { id, name, hp, attack, defense, speed, height, weight, types } =
