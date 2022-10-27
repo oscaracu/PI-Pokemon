@@ -4,6 +4,7 @@ export const CLEAR_POKEMON = "CLEAR_POKEMON";
 export const GET_TYPES = "GET_TYPES";
 export const GET_POKEMON = "GET_POKEMON";
 export const CLEAR_POKEMONS = "CLEAR_POKEMONS";
+export const SET_LAST_SEARCH = "SET_LAST_SEARCH";
 
 const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
 // const baseUrl = "http://localhost:3001";
@@ -36,6 +37,9 @@ export const clearPokemon = () => (dispatch) =>
 
 export const clearPokemons = () => (dispatch) =>
   dispatch({ type: CLEAR_POKEMONS });
+
+export const setLastSearch = (search) => (dispatch) =>
+  dispatch({ type: SET_LAST_SEARCH, payload: search });
 
 // Candidatos a ser eliminados
 

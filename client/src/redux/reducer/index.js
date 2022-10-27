@@ -4,6 +4,7 @@ import {
   CLEAR_POKEMON,
   CLEAR_POKEMONS,
   GET_TYPES,
+  SET_LAST_SEARCH,
   // PREV_OR_NEXT,
 } from "../actions";
 
@@ -14,6 +15,7 @@ const initialState = {
   pokemon: {},
   count: null,
   types: [],
+  lastSearch: "",
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -47,6 +49,12 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         pokemons: {},
+      };
+
+    case SET_LAST_SEARCH:
+      return {
+        ...state,
+        lastSearch: action.payload,
       };
 
     // case PREV_OR_NEXT:

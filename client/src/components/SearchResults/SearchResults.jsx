@@ -1,6 +1,11 @@
 import Pokemons from "../Pokemons/Pokemons";
 // import { useSelector } from "react-redux";
-import { getAllPokemons, getTypes } from "../../redux/actions";
+import {
+  clearPokemons,
+  getAllPokemons,
+  getTypes,
+  setLastSearch,
+} from "../../redux/actions";
 import { useLocation, useHistory } from "react-router-dom";
 // import PageNotFound404 from "../PageNotFound404/PageNotFound404";
 import Pagination from "../Pagination/Pagination";
@@ -155,8 +160,6 @@ const SearchSection = styled.section`
 
 const SearchResults = (props) => {
   const { dispatch, useEffect, useSelector } = props;
-  // const [currentPage, setCurrentPage] = useState(null);
-  // Obtenemos los querys pasados de la url para armar la paginación y los filtros
   const location = useLocation();
   const history = useHistory();
   const querys = new URLSearchParams(location.search);
@@ -179,6 +182,12 @@ const SearchResults = (props) => {
   // const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllPokemons(location.search));
+
+    return () => dispatch(clearPokemons());
+  }, [dispatch, location]);
+
+  useEffect(() => {
+    return () => dispatch(setLastSearch(location.search));
   }, [dispatch, location]);
 
   // Nos suscribimos al store para renderear el componente cada vez que tengamos un cambio
@@ -203,81 +212,7 @@ const SearchResults = (props) => {
   // Declaramos nuestros handlers para cada filtro
   /////////////////////////////////////////////////
 
-  // function handlePrev(event) {
-  //   history.push({ search: `?${prev ? prev.split("?").pop() : ""}` });
-  // }
-
-  // function handleNext(event) {
-  //   history.push({ search: `?${next ? next.split("?").pop() : ""}` });
-  // }
-
-  // function handleDesc(event) {
-  //   // Version 1
-  //   // if (location.search === "")
-  //   //   history.push({ search: `${location.search}order=DESC` });
-  //   // else if (!location.search.includes("order=DESC"))
-  //   //   history.push({ search: `${location.search}&order=DESC` });
-  //   // if (location.search.includes("order=ASC"))
-  //   //   history.push({
-  //   //     search: location.search.replace("order=ASC", "order=DESC"),
-  //   //   });
-
-  //   // Version 2
-  //   const orderQuery = querys.get("sort");
-  //   if (orderQuery) querys.set("sort", "DESC");
-  //   else querys.append("sort", "DESC");
-  //   history.push({ search: querys.toString() });
-  // }
-
-  // function handleAsc(event) {
-  //   const orderQuery = querys.get("sort");
-  //   if (orderQuery) querys.set("sort", "ASC");
-  //   else querys.append("sort", "ASC");
-  //   history.push({ search: querys.toString() });
-  // }
-
   function handleOrderBy(value) {
-    // VERSION 1
-    // if (location.search === "")
-    //   history.push({
-    //     search: `${location.search}orderBy=${event.target.value}`,
-    //   });
-    // else if (!location.search.includes(`orderBy=${event.target.value}`))
-    //   history.push({
-    //     search: `${location.search}&orderBy=${event.target.value}`,
-    //   });
-    // if (
-    //   location.search.includes("orderBy=name") &&
-    //   event.target.name !== "name"
-    // )
-    //   history.push({
-    //     search: location.search.replace(
-    //       "orderBy=name",
-    //       `orderBy=${event.target.value}`
-    //     ),
-    //   });
-    // else if (
-    //   location.search.includes("orderBy=attack") &&
-    //   event.target.name !== "attack"
-    // )
-    //   history.push({
-    //     search: location.search.replace(
-    //       "orderBy=attack",
-    //       `orderBy=${event.target.value}`
-    //     ),
-    //   });
-    // else if (
-    //   location.search.includes("orderBy=id") &&
-    //   event.target.name !== "id"
-    // )
-    //   history.push({
-    //     search: location.search.replace(
-    //       "orderBy=id",
-    //       `orderBy=${event.target.value}`
-    //     ),
-    //   });
-
-    // VERSION 2
     const orderByQuery = querys.get("orderBy");
     if (orderByQuery) querys.set("orderBy", value);
     else querys.append("orderBy", value);
@@ -320,35 +255,12 @@ const SearchResults = (props) => {
     history.push({ search: "" });
   }
 
-  ////////////////////////////////////////////////////////
-  //
-  //  1.- Agregar un render condicional cuando count sea 0 que muestre el mensaje: No se encontraron pokemons
-  //  2.- Agregar una pantalla de loading mientras pokemons.length sea 0
-
   try {
     return (
       <>
         <SearchSection>
           <div className="filters">
             <div className="container">
-              {/* Selector para ordenamiendo por id, nombre o ataque */}
-              {/* <div className="filter">
-                <label htmlFor="orderby">Order by: </label>
-                <select
-                  value={querys.get("orderBy") ? querys.get("orderBy") : "id"}
-                  onChange={handleOrderBy}
-                  name="orderby"
-                  id="orderby"
-                  disabled={querys.has("name") ? true : false}
-                >
-                  <option value="id">Number</option>
-                  <option value="name">Name</option>
-                  <option value="attack">Attack</option>
-                </select>
-              </div> */}
-
-              {/* // VERSION 2 */}
-
               <div className="filter">
                 <div className="dropdown">
                   <button className="dropbtn">
@@ -365,24 +277,6 @@ const SearchResults = (props) => {
                 </div>
               </div>
 
-              {/* /// Botones de ordenamiento ascendente / descendente */}
-
-              {/* <div className="filter">
-                <label htmlFor="sort">Sort: </label>
-                <select
-                  value={querys.get("sort") ? querys.get("sort") : "ASC"}
-                  onChange={handleSort}
-                  name="sort"
-                  id="sort"
-                  disabled={querys.has("name") ? true : false}
-                >
-                  <option value="ASC">Asc</option>
-                  <option value="DESC">Desc</option>
-                </select>
-              </div> */}
-
-              {/* // VERSION 3 */}
-
               <div className="filter">
                 <div className="dropdown">
                   <button className="dropbtn">
@@ -395,45 +289,6 @@ const SearchResults = (props) => {
                   </div>
                 </div>
               </div>
-
-              {/* <div>
-              <p>
-                Sort:{" "}
-                <button
-                  onClick={handleAsc}
-                  disabled={querys.has("name") ? true : false}
-                >
-                  Asc
-                </button>{" "}
-                |{" "}
-                <button
-                  onClick={handleDesc}
-                  disabled={querys.has("name") ? true : false}
-                >
-                  Desc
-                </button>
-              </p>
-            </div> */}
-              {/* Selector para filtrado por tipo de pokemon */}
-              {/* <div className="filter">
-                <label htmlFor="types">Filter by type: </label>
-                <select
-                  value={querys.get("type") ? querys.get("type") : "all"}
-                  onChange={handleTypeFilter}
-                  name="types"
-                  id="types"
-                  disabled={querys.has("name") ? true : false}
-                >
-                  <option value="all">All</option>
-                  {types.map((type) => (
-                    <option key={type.id} value={type.id}>
-                      {type.name}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
-
-              {/* VERSION 2 */}
 
               <div className="filter">
                 <div className="dropdown">
@@ -455,22 +310,6 @@ const SearchResults = (props) => {
                   </div>
                 </div>
               </div>
-
-              {/* Mostrar por origen, obtenido desde la API (originales) o desde la base de datos (nuevos) */}
-              {/* <div className="filter">
-                <label htmlFor="show">Show: </label>
-                <select
-                  defaultValue={querys.get("show") ? querys.get("show") : "all"}
-                  onChange={handleShow}
-                  name="show"
-                  id="show"
-                  disabled={querys.has("name") ? true : false}
-                >
-                  <option value="all">All</option>
-                  <option value="originals">Originals</option>
-                  <option value="new">New</option>
-                </select>
-              </div> */}
 
               <div className="filter">
                 <div className="dropdown">
@@ -496,19 +335,6 @@ const SearchResults = (props) => {
             </div>
           </div>
 
-          {/* // VERSION 2 */}
-
-          {/* Opciones de paginación */}
-          {/* <div>
-          <button onClick={handlePrev} disabled={prev ? false : true}>
-          Prev
-          </button>
-          <button onClick={handleNext} disabled={next ? false : true}>
-          Next
-          </button>
-        </div> */}
-          {/* Render de resultados de busqueda */}
-
           <section className="results">
             {count === 0 ? (
               <NotFound message="No pokemon found!" />
@@ -516,6 +342,19 @@ const SearchResults = (props) => {
               <div className="container">
                 {pokemons.length > 0 ? (
                   <>
+                    <div className="pagination">
+                      <Pagination
+                        totalRecords={count}
+                        pageLimit={currentLimit}
+                        pageNeighbours={2}
+                        currentPage={currentPage}
+                        prev={prev}
+                        next={next}
+                        history={history}
+                        querys={querys}
+                      />
+                    </div>
+
                     <div className="cards">
                       {pokemons.map((pokemon) => (
                         <Pokemons key={pokemon.id} data={pokemon} />

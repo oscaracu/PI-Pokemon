@@ -25,57 +25,6 @@ router.get("/", async (req, res) => {
   try {
     // En esta seccion se procesan los request por query
 
-    ////////////////////
-    // Version 1 (Lenta)
-    ////////////////////
-    // Obtiene los datos de portada desde la API externa o base de datos segun corresponda
-
-    // if (name) {
-    //   const parsedName = name
-    //     .split(/[ \-\_]/)
-    //     .map((word) => `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}`)
-    //     .join(" ");
-    //   const source = await Source.findOne({
-    //     where: { name: parsedName },
-    //     include: Type,
-    //   });
-    //   if (!source) throw new Error("Pokemon not found");
-    //   // Si el elemento encontrado no tiene una url se hace una consulta a la base de datos
-    //   if (!source.url) {
-    //     const pokemonDetails = await source.getPokemon();
-    //     const currentPokemon = {
-    //       id: source.id,
-    //       name: source.name,
-    //       image: pokemonDetails.image,
-    //       attack: pokemonDetails.attack,
-    //       types: source.types.map((type) => {
-    //         return { name: type.name };
-    //       }),
-    //     };
-
-    //     return res.send(currentPokemon);
-    //   } else {
-    //     // Si el elemento si tiene una url se hace una request a la API externa
-    //     const apiResponse = await axios(source.url);
-    //     const pokemonDetails = apiResponse.data;
-    //     const currentPokemon = {
-    //       id: source.id,
-    //       name: source.name,
-    //       image: pokemonDetails.sprites.other["official-artwork"].front_default,
-    //       attack: pokemonDetails.stats[1].base_stat,
-    //       types: pokemonDetails.types.map((type) => {
-    //         return { name: type.type.name };
-    //       }),
-    //     };
-    //     return res.send(currentPokemon);
-    //   }
-    // }
-
-    ////////////////////
-    // Version 2
-    /////////////////
-    // Usamos la lista cache Source y sus datos integrados para mostrar el resultado
-
     ///////////////////////////////////////////////////////////////////////////////
     //Si hay un name por query se muestra solo al Pokemon que corresponda al nombre
     ///////////////////////////////////////////////////////////////////////////////
@@ -185,46 +134,6 @@ router.get("/", async (req, res) => {
     // Rows contiene un array con los elementos obtenidos con findAndCountAll
     const pokemonsSource = rows;
 
-    ///////////////////
-    // Version 1 (Lenta)
-    ///////////////////
-    //  Iteramos sobre la lista cache show y solicitamos los datos a la API externa o Base de datos segun corresponda
-
-    // for (const source of pokemonsSource) {
-
-    // Si el elemento encontrado no tiene una url se hace una consulta a la base de datos
-
-    // if (!source.url) {
-    //   const pokemonDetails = await source.getPokemon();
-    //   const currentPokemon = {
-    //     id: source.id,
-    //     name: pokemonDetails.name,
-    //     image: pokemonDetails.image,
-    //     attack: pokemonDetails.attack,
-    //     types: source.types.map((type) => {
-    //       return { name: type.name };
-    //     }),
-    //   };
-    //   pokemonsList.results.push(currentPokemon);
-    // } else {
-    //   // Si el elemento si tiene una url se hace una request a la API externa
-
-    //   const apiResponse = await axios(source.url);
-    //   const pokemonDetails = apiResponse.data;
-    //   const currentPokemon = {
-    //     id: source.id,
-    //     name: source.name,
-    //     image: pokemonDetails.sprites.other["official-artwork"].front_default,
-    //     attack: pokemonDetails.stats[1].base_stat,
-    //     types: pokemonDetails.types.map((type) => {
-    //       return { name: type.type.name };
-    //     }),
-    //   };
-    //   // Almacenamos los resultados
-    //   pokemonsList.results.push(currentPokemon);
-    // }
-
-    // }
     /////////////////////
     // Version 2 (Rapida)
     /////////////////////
@@ -331,14 +240,6 @@ router.post("/", async (req, res) => {
     /////////////////////////////////////////////////////////////////////////////////////
     const { count } = await Source.findAndCountAll();
     if (count === 0) {
-      // Version 1
-      // const apiRequest = await axios(
-      //   "https://pokeapi.co/api/v2/pokemon/?limit=905"
-      // );
-      // const pokemonList = apiRequest.data.results;
-      // const dbIndex = await Source.bulkCreate(pokemonList);
-      // return res.send(dbIndex);
-
       // Version 2
       // Hacemos request a la API Pokemon externa
       const apiRequest = await axios(

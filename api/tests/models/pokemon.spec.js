@@ -27,7 +27,7 @@ describe("Pokemon model", () => {
 
     describe("properties", () => {
       it("should have name, hp, attack, defense, speed, height and weight properties", async () => {
-        const pokemon = await Pokemon.create({ name: "Kika", num: 999 });
+        const pokemon = await Pokemon.create({ name: "Kika" });
         expect(pokemon).to.have.property("name");
         expect(pokemon).to.have.property("hp");
         expect(pokemon).to.have.property("attack");

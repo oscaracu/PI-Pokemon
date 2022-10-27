@@ -442,12 +442,59 @@ const Pokemon = (props) => {
     error,
   } = useSelector((state) => state.pokemon);
 
+  const { lastSearch } = useSelector((state) => state);
+
+  console.log(error);
+
   function prevBtnHandle() {
-    history.push(`/pokemon/${parseInt(id) - 1}`);
+    fetch(
+      `https://pi-pokemon-production-cccc.up.railway.app/pokemons/${
+        parseInt(id) - 1
+      }`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          history.push(`/pokemon${lastSearch}`);
+        } else {
+          history.push(`/pokemon/${parseInt(id) - 1}`);
+        }
+      });
+
+    // history.push(`/pokemon/${parseInt(id) - 1}`);
   }
 
-  function nextBtnHandle() {
-    history.push(`/pokemon/${parseInt(id) + 1}`);
+  async function nextBtnHandle() {
+    await fetch(
+      `https://pi-pokemon-production-cccc.up.railway.app/pokemons/${
+        parseInt(id) + 1
+      }`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          history.push(`/pokemon${lastSearch}`);
+        } else {
+          history.push(`/pokemon/${parseInt(id) + 1}`);
+        }
+      });
+
+    // history.push(`/pokemon/${parseInt(id) + 1}`);
+  }
+
+  async function deleteHandler(id) {
+    const body = { id };
+    const response = await fetch(
+      "https://pi-pokemon-production-cccc.up.railway.app/pokemons",
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
+    console.log(response.json());
+    alert(`Pokemon #${id} deleted successfully`);
+    history.push("/pokemon" + lastSearch);
   }
 
   if (error) {
@@ -486,7 +533,10 @@ const Pokemon = (props) => {
             ◄ Prev
           </button>
 
-          <button className="back" onClick={() => history.push("/pokemon")}>
+          <button
+            className="back"
+            onClick={() => history.push("/pokemon" + lastSearch)}
+          >
             Back
           </button>
           <button
@@ -545,12 +595,6 @@ const Pokemon = (props) => {
                       <div className="base-stat speed" style={speedStat}></div>
                     </div>
                   </div>
-                  {/* <ul>
-                <li>hp: {hp}</li>
-                <li>attack: {attack}</li>
-                <li>defense: {defense}</li>
-                <li>speed: {speed}</li>
-              </ul> */}
                   <div className="measures">
                     <div className="weight">
                       <img
@@ -567,6 +611,25 @@ const Pokemon = (props) => {
 
                       <p>{height ? height / 10 : 0.0} m</p>
                     </div>
+                  </div>
+                  <div className="delete">
+                    {id > 905 ? (
+                      <button
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              "Are you sure to delete this Pokemon?"
+                            )
+                          ) {
+                            deleteHandler(id);
+                          }
+                        }}
+                      >
+                        DELETE
+                      </button>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
