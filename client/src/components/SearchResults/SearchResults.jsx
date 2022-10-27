@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Pokemons from "../Pokemons/Pokemons";
 // import { useSelector } from "react-redux";
 import { getAllPokemons, getTypes } from "../../redux/actions";
@@ -6,7 +5,6 @@ import { useLocation, useHistory } from "react-router-dom";
 // import PageNotFound404 from "../PageNotFound404/PageNotFound404";
 import Pagination from "../Pagination/Pagination";
 import NotFound from "../NotFound/NotFound";
-import Loading from "../Loading/Loading";
 import styled from "styled-components";
 import { clearPokemon } from "../../redux/actions";
 
@@ -33,6 +31,7 @@ const SearchSection = styled.section`
     .cards {
       margin: 3em;
       width: 75%;
+      max-width: 1000px;
       display: flex;
       flex-wrap: wrap;
       flex-direction: row;
@@ -156,7 +155,6 @@ const SearchSection = styled.section`
 
 const SearchResults = (props) => {
   const { dispatch, useEffect, useSelector } = props;
-  const [loading, setLoading] = useState(false);
   // const [currentPage, setCurrentPage] = useState(null);
   // Obtenemos los querys pasados de la url para armar la paginación y los filtros
   const location = useLocation();
@@ -180,11 +178,7 @@ const SearchResults = (props) => {
 
   // const dispatch = useDispatch();
   useEffect(() => {
-    setLoading(true);
     dispatch(getAllPokemons(location.search));
-    setTimeout(() => {
-      setLoading(false);
-    }, 0);
   }, [dispatch, location]);
 
   // Nos suscribimos al store para renderear el componente cada vez que tengamos un cambio
@@ -330,8 +324,6 @@ const SearchResults = (props) => {
   //
   //  1.- Agregar un render condicional cuando count sea 0 que muestre el mensaje: No se encontraron pokemons
   //  2.- Agregar una pantalla de loading mientras pokemons.length sea 0
-
-  if (loading) return <Loading />;
 
   try {
     return (
@@ -522,24 +514,33 @@ const SearchResults = (props) => {
               <NotFound message="No pokemon found!" />
             ) : (
               <div className="container">
-                <div className="cards">
-                  {pokemons.map((pokemon) => (
-                    <Pokemons key={pokemon.id} data={pokemon} />
-                  ))}
-                </div>
+                {pokemons.length > 0 ? (
+                  <>
+                    <div className="cards">
+                      {pokemons.map((pokemon) => (
+                        <Pokemons key={pokemon.id} data={pokemon} />
+                      ))}
+                    </div>
 
-                <div className="pagination">
-                  <Pagination
-                    totalRecords={count}
-                    pageLimit={currentLimit}
-                    pageNeighbours={2}
-                    currentPage={currentPage}
-                    prev={prev}
-                    next={next}
-                    history={history}
-                    querys={querys}
+                    <div className="pagination">
+                      <Pagination
+                        totalRecords={count}
+                        pageLimit={currentLimit}
+                        pageNeighbours={2}
+                        currentPage={currentPage}
+                        prev={prev}
+                        next={next}
+                        history={history}
+                        querys={querys}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <img
+                    src={baseUrl + "/images/front/loading.gif"}
+                    alt="Loading Pokeball"
                   />
-                </div>
+                )}
               </div>
             )}
           </section>

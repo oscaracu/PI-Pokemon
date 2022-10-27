@@ -24,6 +24,7 @@ const Main = styled.div`
     .container {
       font-family: "Signika", sans-serif;
       width: 80%;
+      max-width: 1500px;
       display: flex;
       flex-direction: row;
       justify-content: space-evenly;

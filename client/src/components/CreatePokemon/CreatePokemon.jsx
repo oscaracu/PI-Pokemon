@@ -507,6 +507,7 @@ const CreatePokemon = (props) => {
                   {types.length > 0 ? (
                     <TypesCheckBox
                       types={types}
+                      inputs={inputs}
                       setInputs={setInputs}
                       setErrors={setErrors}
                     />
@@ -567,6 +568,8 @@ export function validate(inputs) {
 
   if (inputs.types.length === 0) {
     errors.types = "You must choose at least one type of pokemon";
+  } else if (inputs.types.length > 2) {
+    errors.types = "You can't select more than 2 types of pokemon";
   }
 
   return errors;

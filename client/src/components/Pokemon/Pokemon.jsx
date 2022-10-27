@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { clearPokemon, getPokemon } from "../../redux/actions";
-import Loading from "../Loading/Loading";
 import styled from "styled-components";
 import NotFound from "../NotFound/NotFound";
 
@@ -27,9 +26,12 @@ const PokemonSection = styled.section`
       background-color: #ecf0f1;
       max-width: 1000px;
       width: 75%;
+      min-height: 545px;
       margin: 3em;
       display: flex;
       flex-direction: row;
+      align-items: center;
+      justify-content: center;
       gap: 20px;
 
       h2 {
@@ -416,18 +418,12 @@ const PokemonSection = styled.section`
 const Pokemon = (props) => {
   const history = useHistory();
 
-  // Creamos un estado de carga
-  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   // Solicitamos los datos a nuestra API
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoading(true);
     dispatch(getPokemon(parseInt(id)));
-    setTimeout(() => {
-      setLoading(false);
-    }, 0);
 
     return () => dispatch(clearPokemon());
   }, [dispatch, id]);
@@ -456,8 +452,6 @@ const Pokemon = (props) => {
 
   if (error) {
     return <NotFound message={error} />;
-  } else if (loading) {
-    return <Loading />;
   }
 
   const hpPercent = Math.floor((parseInt(hp) / 255) * 100);
@@ -504,70 +498,85 @@ const Pokemon = (props) => {
           </button>
         </div>
         <div className="summary">
-          <div className="character-image">
-            <img src={image} alt={name} />
-          </div>
-          <div className="info">
-            <div className="container">
-              <h2>
-                {name} <span className="badge">#{id}</span>{" "}
-              </h2>
-              <ul className="types">
-                {types.map((type) => (
-                  <li className={type.name.toLowerCase()} key={type.id}>
-                    {type.name.toUpperCase()}
-                  </li>
-                ))}
-              </ul>
-              <div className="stats">
-                <span className="name">HP</span>
-                <div className="skill">
-                  <div className="base-stat hp" style={hpStat}></div>
-                </div>
+          {image ? (
+            <>
+              <div className="character-image">
+                <img src={image} alt={name} />
               </div>
-              <div className="stats">
-                <span className="name">ATTACK</span>
-                <div className="skill">
-                  <div className="base-stat attack" style={attackStat}></div>
-                </div>
-              </div>
-              <div className="stats">
-                <span className="name">DEFENSE</span>
-                <div className="skill">
-                  <div className="base-stat defense" style={defenseStat}></div>
-                </div>
-              </div>
-              <div className="stats">
-                <span className="name">SPEED</span>
-                <div className="skill">
-                  <div className="base-stat speed" style={speedStat}></div>
-                </div>
-              </div>
-              {/* <ul>
+              <div className="info">
+                <div className="container">
+                  <h2>
+                    {name} <span className="badge">#{id}</span>{" "}
+                  </h2>
+                  <ul className="types">
+                    {types.map((type) => (
+                      <li className={type.name.toLowerCase()} key={type.id}>
+                        {type.name.toUpperCase()}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="stats">
+                    <span className="name">HP</span>
+                    <div className="skill">
+                      <div className="base-stat hp" style={hpStat}></div>
+                    </div>
+                  </div>
+                  <div className="stats">
+                    <span className="name">ATTACK</span>
+                    <div className="skill">
+                      <div
+                        className="base-stat attack"
+                        style={attackStat}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="stats">
+                    <span className="name">DEFENSE</span>
+                    <div className="skill">
+                      <div
+                        className="base-stat defense"
+                        style={defenseStat}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="stats">
+                    <span className="name">SPEED</span>
+                    <div className="skill">
+                      <div className="base-stat speed" style={speedStat}></div>
+                    </div>
+                  </div>
+                  {/* <ul>
                 <li>hp: {hp}</li>
                 <li>attack: {attack}</li>
                 <li>defense: {defense}</li>
                 <li>speed: {speed}</li>
               </ul> */}
-              <div className="measures">
-                <div className="weight">
-                  <img
-                    src={baseUrl + "/images/front/weight.png"}
-                    alt="Weight"
-                  />
-                  <p>{weight ? weight / 10 : 0.0} Kg</p>
-                </div>
-                <div className="height">
-                  <img
-                    src={baseUrl + "/images/front/height.png"}
-                    alt="Height"
-                  />
+                  <div className="measures">
+                    <div className="weight">
+                      <img
+                        src={baseUrl + "/images/front/weight.png"}
+                        alt="Weight"
+                      />
+                      <p>{weight ? weight / 10 : 0.0} Kg</p>
+                    </div>
+                    <div className="height">
+                      <img
+                        src={baseUrl + "/images/front/height.png"}
+                        alt="Height"
+                      />
 
-                  <p>{height ? height / 10 : 0.0} m</p>
+                      <p>{height ? height / 10 : 0.0} m</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          ) : (
+            <img
+              src={baseUrl + "/images/front/loading.gif"}
+              alt="Loading Pokeball"
+            />
+          )}
         </div>
       </div>
     </PokemonSection>
