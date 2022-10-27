@@ -81,7 +81,9 @@ module.exports = (sequelize) => {
         defaultValue: 10,
         validate: {
           intGTZ(value) {
-            if (!/^([1-9][0-9]+|[1-9])$/.test(value))
+            if (
+              !/^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/.test(value)
+            )
               throw new Error("height " + ERR_MSG_GTZ);
           },
         },
@@ -91,7 +93,9 @@ module.exports = (sequelize) => {
         defaultValue: 10,
         validate: {
           intGTZ(value) {
-            if (!/^([1-9][0-9]+|[1-9])$/.test(value))
+            if (
+              !/^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/.test(value)
+            )
               throw new Error("weight " + ERR_MSG_GTZ);
           },
         },
