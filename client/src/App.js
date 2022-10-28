@@ -7,6 +7,9 @@ import CreatePokemon from "./components/CreatePokemon/CreatePokemon";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import NotFound from "./components/NotFound/NotFound";
+import Nav from "./components/Nav/Nav";
+import About from "./components/About/About";
+import Footer from "./components/Footer/Footer";
 // import { getAllPokemons, getTypes } from "./redux/actions";
 // import Loading from "./components/Loading/Loading";
 
@@ -51,8 +54,15 @@ function App() {
             useSelector={useSelector}
           />
         </Route>
+        <Route path={"/about"}>
+          <Nav />
+          <About />
+          <Footer />
+        </Route>
         <Route path={"/*"}>
+          <Nav />
           <NotFound message="Page Not Found!" />
+          <Footer />
         </Route>
       </Switch>
     </div>

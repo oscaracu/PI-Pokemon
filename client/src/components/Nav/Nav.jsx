@@ -125,7 +125,9 @@ const Nav = (props) => {
                   <li>
                     <NavLink to={"/pokemon"}>Pokemons</NavLink>
                   </li>
-                  <li>About</li>
+                  <li>
+                    <NavLink to={"/about"}>About</NavLink>
+                  </li>
                 </ul>
               </div>
               <div className="right">

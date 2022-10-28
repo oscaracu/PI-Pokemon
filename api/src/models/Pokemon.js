@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        // unique: true,
         validate: {
           notNums(value) {
             if (!/^[a-zA-Z \-]+$/.test(value))
