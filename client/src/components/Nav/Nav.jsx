@@ -31,6 +31,16 @@ const Main = styled.div`
       align-items: center;
       margin: 15px auto;
 
+      @media screen and (max-width: 600px) {
+        flex-direction: column;
+        justify-content: center;
+
+        .right {
+          margin-top: 20px;
+          margin-bottom: 20px;
+        }
+      }
+
       div {
         text-align: center;
       }
@@ -47,6 +57,11 @@ const Main = styled.div`
       .left,
       .right {
         width: 20%;
+
+        @media screen and (max-width: 600px) {
+          width: 100%;
+          max-width: 340px;
+        }
 
         .btn {
           background-color: #3498db;
@@ -77,9 +92,17 @@ const Main = styled.div`
         /* font-weight: 600; */
         color: #2980b9;
 
+        @media screen and (max-width: 600px) {
+          flex-direction: column;
+        }
+
         li {
           border-right: 2px solid #bdc3c7;
           padding: 7px 30px;
+
+          @media screen and (max-width: 600px) {
+            border: none;
+          }
 
           :last-child {
             border-right: none;

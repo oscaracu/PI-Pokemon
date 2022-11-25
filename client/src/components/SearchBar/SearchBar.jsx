@@ -17,6 +17,12 @@ const SearchSection = styled.section`
   align-items: center;
   flex-direction: column;
 
+  @media screen and (max-width: 600px) {
+    height: 350px;
+    margin: 0;
+    background-position: 0px -100px;
+  }
+
   /* div {
     border: 1px solid black;
   } */
@@ -24,7 +30,7 @@ const SearchSection = styled.section`
   .container {
     width: 100%;
     max-width: 1350px;
-    min-height: 450px;
+    height: 450px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,6 +41,13 @@ const SearchSection = styled.section`
     background-position: left, right;
     background-repeat: no-repeat;
 
+    @media screen and (max-width: 600px) {
+      background-image: none;
+      height: 350px;
+      margin: 0;
+      justify-content: end;
+    }
+
     h1 {
       font-family: "Fredoka", sans-serif;
       margin-bottom: 30px;
@@ -44,6 +57,11 @@ const SearchSection = styled.section`
       font-size: 3.5em;
       color: #ecf0f1;
       text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black, 0 0 5px black;
+
+      @media screen and (max-width: 600px) {
+        font-size: 2.5em;
+        width: 90%;
+      }
     }
 
     .searchbar {
@@ -54,12 +72,20 @@ const SearchSection = styled.section`
       background-color: #f1c40f;
       box-shadow: 0px 8px 16px #2c3e50;
 
+      @media screen and (max-width: 600px) {
+        width: 100%;
+      }
+
       form {
         width: 100%;
         padding: 20px;
         display: flex;
         gap: 15px;
         font-family: "Fredoka", sans-serif;
+
+        @media screen and (max-width: 600px) {
+          flex-direction: column;
+        }
 
         button {
           border: none;
@@ -70,6 +96,10 @@ const SearchSection = styled.section`
           color: #ecf0f1;
           text-shadow: 2px 2px 2px #2c3e50;
           font-weight: 500;
+
+          @media screen and (max-width: 600px) {
+            padding: 10px 20px;
+          }
 
           :hover {
             background-color: #c0392b;
