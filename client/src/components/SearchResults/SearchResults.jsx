@@ -230,17 +230,17 @@ const SearchResults = (props) => {
     history.push({ search: querys.toString() });
   }
 
-  function handleShow(value) {
-    const typeQuery = querys.get("show");
-    if (typeQuery) {
-      querys.set("show", value);
-      querys.set("offset", 0);
-    } else {
-      querys.append("show", value);
-      querys.set("offset", 0);
-    }
-    history.push({ search: querys.toString() });
-  }
+  // function handleShow(value) {
+  //   const typeQuery = querys.get("show");
+  //   if (typeQuery) {
+  //     querys.set("show", value);
+  //     querys.set("offset", 0);
+  //   } else {
+  //     querys.append("show", value);
+  //     querys.set("offset", 0);
+  //   }
+  //   history.push({ search: querys.toString() });
+  // }
 
   function handleSort(value) {
     const typeQuery = querys.get("sort");
@@ -309,7 +309,7 @@ const SearchResults = (props) => {
                 </div>
               </div>
 
-              <div className="filter">
+              {/* <div className="filter">
                 <div className="dropdown">
                   <button className="dropbtn">
                     Show
@@ -323,7 +323,7 @@ const SearchResults = (props) => {
                     <button onClick={() => handleShow("new")}>New</button>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="filter">
                 <button onClick={handleReset} className="clear">

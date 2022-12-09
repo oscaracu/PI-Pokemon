@@ -442,8 +442,6 @@ const Pokemon = (props) => {
 
   const { lastSearch } = useSelector((state) => state);
 
-  console.log(error);
-
   function prevBtnHandle() {
     fetch(`${API_URL}/pokemons/${parseInt(id) - 1}`)
       .then((response) => response.json())
@@ -479,7 +477,6 @@ const Pokemon = (props) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    console.log(response.json());
     alert(`Pokemon #${id} deleted successfully`);
     history.push("/pokemon" + lastSearch);
   }
