@@ -9,13 +9,11 @@ import {
   SiStyledcomponents,
   SiLinkedin,
 } from "react-icons/si";
-
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
-// const baseUrl = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const Section = styled.section`
   background-color: #bdc3c7;
-  background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+  background-image: url(${API_URL}/images/front/blue_bg.jpg);
 
   .title {
     width: 100%;
@@ -23,7 +21,7 @@ const Section = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+    background-image: url(${API_URL}/images/front/blue_bg.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -55,7 +53,7 @@ const Section = styled.section`
       margin: 35px;
 
       .picture {
-        background-image: url(${baseUrl}/images/front/about.jpg);
+        background-image: url(${API_URL}/images/front/about.jpg);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -112,7 +110,7 @@ const About = (props) => {
         <div className="container">
           <div className="picture">
             <img
-              src={`${baseUrl}/images/front/about.jpg`}
+              src={`${API_URL}/images/front/about.jpg`}
               alt="It's me... thumbs up!"
             />
           </div>

@@ -3,6 +3,9 @@ const { Pokemon, Source, Type } = require("../db");
 const axios = require("axios");
 const fs = require("fs");
 const { Op } = require("sequelize");
+require("dotenv").config();
+
+const HOST = process.env.HOST;
 
 const router = Router();
 
@@ -20,7 +23,7 @@ const store = { currentImg: null, currentFilename: null };
 router.get("/", async (req, res) => {
   const { name, offset, limit, sort, orderBy, type, show } = req.query;
   // Almacenamos la url base en una constante
-  const currentUrl = `https://${req.hostname}${req.baseUrl}/`;
+  const currentUrl = `${HOST}${req.baseUrl}/`;
 
   try {
     // En esta seccion se procesan los request por query
@@ -170,58 +173,25 @@ router.get("/:id", async (req, res) => {
     const totalRecords = await Source.count();
 
     if (!dbResponse) throw new Error("Pokemon id not found");
-    // Si la response no tiene url se obtienen los detalles de la base de datos local
-    if (!dbResponse.url) {
-      const pokemonDetails = await dbResponse.getPokemon();
-      const { name, image, hp, attack, defense, speed, height, weight } =
-        pokemonDetails;
-      const currentPokemon = {
-        totalRecords,
-        id,
-        name,
-        image,
-        hp,
-        attack,
-        defense,
-        speed,
-        height,
-        weight,
-        types: dbResponse.types.map((type) => {
-          return { id: type.id, name: type.name };
-        }),
-      };
-      return res.send(currentPokemon);
-    } else {
-      //Si la response tiene url, se obtienen los detalles por request a la API pokemon externa
-      const apiResponse = await axios(
-        `https://pokeapi.co/api/v2/pokemon/${id}`
-      );
-      const apiData = apiResponse.data;
-      const { sprites, stats, height, weight, types } = apiData;
-
-      const currentPokemon = {
-        totalRecords,
-        id,
-        name: dbResponse.name,
-        image: sprites.other["official-artwork"].front_default,
-        hp: stats[0].base_stat,
-        attack: stats[1].base_stat,
-        defense: stats[2].base_stat,
-        speed: stats[5].base_stat,
-        height,
-        weight,
-        types: types.map((type) => {
-          const typeSplit = type.type.url.split("/");
-          const typeId = typeSplit[typeSplit.length - 2];
-
-          return {
-            id: typeId,
-            name: type.type.name,
-          };
-        }),
-      };
-      res.send(currentPokemon);
-    }
+    const pokemonDetails = await dbResponse.getPokemon();
+    const { name, image, hp, attack, defense, speed, height, weight } =
+      pokemonDetails;
+    const currentPokemon = {
+      totalRecords,
+      id,
+      name,
+      image,
+      hp,
+      attack,
+      defense,
+      speed,
+      height,
+      weight,
+      types: dbResponse.types.map((type) => {
+        return { id: type.id, name: type.name };
+      }),
+    };
+    return res.send(currentPokemon);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -232,7 +202,7 @@ router.get("/:id", async (req, res) => {
 /////////////
 
 router.post("/", async (req, res) => {
-  const imagesUrl = `https://${req.hostname}/images`;
+  const imagesUrl = `${HOST}/images`;
   const { name, hp, attack, defense, speed, height, weight, types } = req.body;
   try {
     /////////////////////////////////////////////////////////////////////////////////////
@@ -253,13 +223,30 @@ router.post("/", async (req, res) => {
         // De la url obtenida en la primera request hacemos una nueva para obtener detalles
         const newRequest = await axios(pokemon.url);
         const data = newRequest.data;
+
+        // Se arma un objeto con los datos del nuevo Pokemon
+        const newPokemon = {
+          name: data.name,
+          image: data.sprites.other["official-artwork"].front_default,
+          hp: data.stats[0].base_stat,
+          attack: data.stats[1].base_stat,
+          defense: data.stats[2].base_stat,
+          speed: data.stats[5].base_stat,
+          height: data.height,
+          weight: data.weight,
+        };
+        // Aqui se crea un nuevo pokemon en la base de datos
+        const dbPokemon = await Pokemon.create(newPokemon);
+
         currentPokemon.name = data.name;
-        currentPokemon.url = pokemon.url;
+        // currentPokemon.url = pokemon.url;
         currentPokemon.image =
           data.sprites.other["official-artwork"].front_default;
         currentPokemon.attack = data.stats[1].base_stat;
         // Creamos una nueva referencia a la API en nuestra base de datos con los datos que necesitamos para el front
         const currentSource = await Source.create(currentPokemon);
+        await currentSource.setPokemon(dbPokemon);
+
         // Obtenemos los tipos de pokemon del elemento actual
         const typesList = [];
         for (const type of data.types) {
@@ -376,7 +363,7 @@ router.post("/upload", async (req, res) => {
 
 router.put("/", async (req, res) => {
   // Definimos una ruta para las imagenes
-  const imagesUrl = `https://${req.hostname}/images`;
+  const imagesUrl = `${HOST}/images`;
 
   // Almacenamos en variables los datos pasados por body
   const { id, name, hp, attack, defense, speed, height, weight, types } =

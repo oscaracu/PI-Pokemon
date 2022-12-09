@@ -1,7 +1,5 @@
 import styled from "styled-components";
-
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
-// const baseUrl = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const NotFoundStyle = styled.div`
   width: 100%;
@@ -37,7 +35,7 @@ const NotFound = (props) => {
       <div className="error-container">
         <img
           className="not-found"
-          src={baseUrl + "/images/front/not_found.png"}
+          src={API_URL + "/images/front/not_found.png"}
           alt="Not found"
         />
         <h1>{message}</h1>

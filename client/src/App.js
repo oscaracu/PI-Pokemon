@@ -10,8 +10,8 @@ import NotFound from "./components/NotFound/NotFound";
 import Nav from "./components/Nav/Nav";
 import About from "./components/About/About";
 import Footer from "./components/Footer/Footer";
-// import { getAllPokemons, getTypes } from "./redux/actions";
-// import Loading from "./components/Loading/Loading";
+import { getAllPokemons } from "./redux/actions";
+import Loading from "./components/Loading/Loading";
 
 function App() {
   // const { search } = useLocation();
@@ -22,19 +22,22 @@ function App() {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(getAllPokemons(search ? search : ""));
-  //   dispatch(getTypes());
-  // }, [dispatch, search]);
+  useEffect(() => {
+    dispatch(getAllPokemons(""));
+  }, [dispatch]);
 
-  // const { count } = useSelector((state) => state);
+  const { count } = useSelector((state) => state);
+
+  if (!count) {
+    return <Loading />;
+  }
 
   return (
     <div className="App">
       <Switch>
         <Route exact path={"/"}>
           <Landing
-            count={905}
+            count={count}
             dispatch={dispatch}
             useEffect={useEffect}
             useSelector={useSelector}

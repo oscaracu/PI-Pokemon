@@ -30,9 +30,9 @@ module.exports = (sequelize) => {
           );
         },
       },
-      url: {
-        type: DataTypes.STRING,
-      },
+      // url: {
+      //   type: DataTypes.STRING,
+      // },
       image: {
         type: DataTypes.STRING,
       },

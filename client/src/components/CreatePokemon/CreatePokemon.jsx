@@ -5,15 +5,13 @@ import Footer from "../Footer/Footer";
 import Nav from "../Nav/Nav";
 import TypesCheckBox from "../TypesCheckbox/TypesCheckBox";
 import styled from "styled-components";
-
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
-// const baseUrl = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const CreateSection = styled.section`
   box-sizing: border-box;
   color: #34495e;
   font-family: "Fredoka", sans-serif;
-  background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+  background-image: url(${API_URL}/images/front/blue_bg.jpg);
 
   /* div {
     border: 1px solid black;
@@ -34,7 +32,7 @@ const CreateSection = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+    background-image: url(${API_URL}/images/front/blue_bg.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -289,7 +287,7 @@ const CreatePokemon = (props) => {
       height: inputs.height / 10,
     };
     event.preventDefault();
-    fetch(`${baseUrl}/pokemons`, {
+    fetch(`${API_URL}/pokemons`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -312,7 +310,7 @@ const CreatePokemon = (props) => {
   function handleImageLoad(event) {
     const formData = new FormData();
     formData.append("img", event.target.files[0]);
-    fetch(`${baseUrl}/pokemons/upload`, {
+    fetch(`${API_URL}/pokemons/upload`, {
       method: "POST",
       body: formData,
     })
@@ -342,7 +340,7 @@ const CreatePokemon = (props) => {
                   src={
                     isFilePicked
                       ? URL.createObjectURL(selectedFile)
-                      : baseUrl + "/images/default.png"
+                      : API_URL + "/images/default.png"
                   }
                   alt="Preview"
                 />
