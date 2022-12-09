@@ -213,7 +213,7 @@ router.post("/", async (req, res) => {
       // Version 2
       // Hacemos request a la API Pokemon externa
       const apiRequest = await axios(
-        "https://pokeapi.co/api/v2/pokemon/?limit=905"
+        "https://pokeapi.co/api/v2/pokemon/?offset=500&limit=100"
       );
       // Almacenamos la response en una variable
       const sourceList = apiRequest.data.results;
@@ -371,7 +371,7 @@ router.put("/", async (req, res) => {
 
   try {
     if (!id) throw new Error("an id is required");
-    if (parseInt(id) < 906)
+    if (parseInt(id) < 501)
       throw new Error("modifying an original pokemon is not allowed");
     // Hacemos la request al indice de la base de datos por id
     const currentSource = await Source.findByPk(parseInt(id));
@@ -476,7 +476,7 @@ router.delete("/", async (req, res) => {
     // Verificamos que sea un numero
     if (isNaN(id)) throw new Error("a number is required");
     // Verificamos que el numero de id no pertenezca a pokemones originales
-    if (parseInt(id) < 906)
+    if (parseInt(id) < 501)
       throw new Error("deleting an original pokemon is not allowed");
     // Pasadas las verificaciones almacenamos el registro de la base de datos en una variable
     const currentSource = await Source.findByPk(parseInt(id));
