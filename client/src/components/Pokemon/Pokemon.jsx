@@ -472,7 +472,7 @@ const Pokemon = (props) => {
 
   async function deleteHandler(id) {
     const body = { id };
-    const response = await fetch(`${API_URL}/pokemons`, {
+    await fetch(`${API_URL}/pokemons`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
