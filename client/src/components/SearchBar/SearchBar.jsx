@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-
-// const baseUrl = "http://localhost:3001";
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const SearchSection = styled.section`
-  background-image: url(${baseUrl}/images/front/main_bg.png);
+  background-image: url(${API_URL}/images/front/main_bg.png);
   background-size: cover;
   background-position: bottom;
   background-repeat: no-repeat;
@@ -29,8 +27,8 @@ const SearchSection = styled.section`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url(${baseUrl}/images/front/pikachu_01.png),
-      url(${baseUrl}/images/front/eevee_01.png);
+    background-image: url(${API_URL}/images/front/pikachu_01.png),
+      url(${API_URL}/images/front/eevee_01.png);
     background-size: contain, contain;
     background-position: left, right;
     background-repeat: no-repeat;

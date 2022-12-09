@@ -5,28 +5,26 @@ export const GET_TYPES = "GET_TYPES";
 export const GET_POKEMON = "GET_POKEMON";
 export const CLEAR_POKEMONS = "CLEAR_POKEMONS";
 export const SET_LAST_SEARCH = "SET_LAST_SEARCH";
-
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
-// const baseUrl = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const getAllPokemons =
   (search = "") =>
   (dispatch) => {
-    return fetch(`${baseUrl}/pokemons/${search}`)
+    return fetch(`${API_URL}/pokemons/${search}`)
       .then((response) => response.json())
       .then((data) => dispatch({ type: CATCH_EM_ALL, payload: data }))
       .catch((error) => console.error(error));
   };
 
 export const getTypes = () => (dispatch) => {
-  return fetch(`${baseUrl}/types`)
+  return fetch(`${API_URL}/types`)
     .then((response) => response.json())
     .then((data) => dispatch({ type: GET_TYPES, payload: data }))
     .catch((error) => console.log(error));
 };
 
 export const getPokemon = (id) => (dispatch) => {
-  return fetch(`${baseUrl}/pokemons/${id}`)
+  return fetch(`${API_URL}/pokemons/${id}`)
     .then((response) => response.json())
     .then((data) => dispatch({ type: GET_POKEMON, payload: data }))
     .catch((error) => console.log(error));

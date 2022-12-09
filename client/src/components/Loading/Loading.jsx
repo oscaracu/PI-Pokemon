@@ -1,7 +1,5 @@
 import styled from "styled-components";
-
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
-// const baseUrl = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const LoadDiv = styled.div`
   width: 100vw;
@@ -96,7 +94,7 @@ const Loading = (props) => {
     <LoadDiv>
       <div className="container">
         <img
-          src={baseUrl + "/images/front/loading.gif"}
+          src={API_URL + "/images/front/loading.gif"}
           alt="Loading Pokeball"
         />
         <section className="spinner-container">

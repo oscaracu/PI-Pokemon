@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
-// const baseUrl = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const Cards = styled.div`
   box-sizing: border-box;
@@ -49,7 +47,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/normal.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/normal.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -62,7 +60,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/fighting.svg) no-repeat
+        background: url(${API_URL}/images/front/types/fighting.svg) no-repeat
           6px center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -75,7 +73,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/bug.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/bug.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -88,7 +86,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/dark.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/dark.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -101,7 +99,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/dragon.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/dragon.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -114,7 +112,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/electric.svg) no-repeat
+        background: url(${API_URL}/images/front/types/electric.svg) no-repeat
           6px center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -127,7 +125,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/fairy.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/fairy.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -140,7 +138,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/fire.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/fire.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -153,7 +151,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/flying.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/flying.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -166,7 +164,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/ghost.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/ghost.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -179,7 +177,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/grass.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/grass.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -192,7 +190,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/ground.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/ground.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -205,7 +203,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/ice.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/ice.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -218,7 +216,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/poison.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/poison.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -231,7 +229,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/psychic.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/psychic.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -244,7 +242,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/rock.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/rock.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -257,7 +255,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/steel.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/steel.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;
@@ -270,7 +268,7 @@ const Cards = styled.div`
         font-family: "Secular One", sans-serif;
         font-size: 0.8em;
         color: #ecf0f1;
-        background: url(${baseUrl}/images/front/types/water.svg) no-repeat 6px
+        background: url(${API_URL}/images/front/types/water.svg) no-repeat 6px
           center;
         background-size: 16px;
         padding: 4px 8px 1px;

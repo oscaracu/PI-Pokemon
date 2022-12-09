@@ -12,14 +12,12 @@ import Pagination from "../Pagination/Pagination";
 import NotFound from "../NotFound/NotFound";
 import styled from "styled-components";
 import { clearPokemon } from "../../redux/actions";
-
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
-// const baseUrl = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const SearchSection = styled.section`
   color: #2c3e50;
   font-family: "Fredoka", sans-serif;
-  background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+  background-image: url(${API_URL}/images/front/blue_bg.jpg);
 
   background-color: #bdc3c7;
 
@@ -55,7 +53,7 @@ const SearchSection = styled.section`
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+    background-image: url(${API_URL}/images/front/blue_bg.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -376,7 +374,7 @@ const SearchResults = (props) => {
                   </>
                 ) : (
                   <img
-                    src={baseUrl + "/images/front/loading.gif"}
+                    src={API_URL + "/images/front/loading.gif"}
                     alt="Loading Pokeball"
                   />
                 )}

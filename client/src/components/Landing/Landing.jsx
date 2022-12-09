@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import { getPokemon } from "../../redux/actions";
 import styled from "styled-components";
 import Loading from "../Loading/Loading";
-
-// const baseUrl = "http://localhost:3001";
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const Box = styled.div`
   box-sizing: border-box;
@@ -15,7 +13,7 @@ const Box = styled.div`
   justify-content: center;
   align-items: center;
   background-color: white;
-  background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+  background-image: url(${API_URL}/images/front/blue_bg.jpg);
   background-repeat: repeat-x;
   background-size: 50% 50%;
   background-position: center center;
@@ -76,9 +74,7 @@ const Landing = (props) => {
     if (!randomPokemon.isSet && count) {
       const id = Math.floor(Math.random() * count);
       dispatch(getPokemon(id === 0 ? 1 : id));
-      setTimeout(() => {
-        setRandomPokemon({ id, isSet: true });
-      }, 3000);
+      setRandomPokemon({ id, isSet: true });
     }
   }, [count, dispatch, randomPokemon]);
 
@@ -99,7 +95,7 @@ const Landing = (props) => {
           <div className="big-pokemon" style={bigImage}></div>
           <div>
             <div>
-              <img src={baseUrl + "/images/front/logo.svg"} alt="Pokemon" />
+              <img src={API_URL + "/images/front/logo.svg"} alt="Pokemon" />
             </div>
             <div>
               <Link className="btn" to={"/pokemon"}>

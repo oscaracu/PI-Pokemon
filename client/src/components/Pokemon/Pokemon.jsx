@@ -4,14 +4,12 @@ import { useHistory, useParams } from "react-router-dom";
 import { clearPokemon, getPokemon } from "../../redux/actions";
 import styled from "styled-components";
 import NotFound from "../NotFound/NotFound";
-
-const baseUrl = "https://pi-pokemon-production-cccc.up.railway.app";
-// const baseUrl = "http://localhost:3001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const PokemonSection = styled.section`
   color: #2c3e50;
   font-family: "Fredoka", sans-serif;
-  background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+  background-image: url(${API_URL}/images/front/blue_bg.jpg);
 
   .container {
     background-color: #ecf0f1cc;
@@ -139,7 +137,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/normal.svg)
+              background: url(${API_URL}/images/front/types/normal.svg)
                 no-repeat 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -152,7 +150,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/fighting.svg)
+              background: url(${API_URL}/images/front/types/fighting.svg)
                 no-repeat 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -165,7 +163,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/bug.svg) no-repeat
+              background: url(${API_URL}/images/front/types/bug.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -178,7 +176,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/dark.svg) no-repeat
+              background: url(${API_URL}/images/front/types/dark.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -191,7 +189,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/dragon.svg)
+              background: url(${API_URL}/images/front/types/dragon.svg)
                 no-repeat 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -204,7 +202,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/electric.svg)
+              background: url(${API_URL}/images/front/types/electric.svg)
                 no-repeat 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -217,7 +215,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/fairy.svg) no-repeat
+              background: url(${API_URL}/images/front/types/fairy.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -230,7 +228,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/fire.svg) no-repeat
+              background: url(${API_URL}/images/front/types/fire.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -243,7 +241,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/flying.svg)
+              background: url(${API_URL}/images/front/types/flying.svg)
                 no-repeat 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -256,7 +254,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/ghost.svg) no-repeat
+              background: url(${API_URL}/images/front/types/ghost.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -269,7 +267,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/grass.svg) no-repeat
+              background: url(${API_URL}/images/front/types/grass.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -282,7 +280,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/ground.svg)
+              background: url(${API_URL}/images/front/types/ground.svg)
                 no-repeat 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -295,7 +293,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/ice.svg) no-repeat
+              background: url(${API_URL}/images/front/types/ice.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -308,7 +306,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/poison.svg)
+              background: url(${API_URL}/images/front/types/poison.svg)
                 no-repeat 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -321,7 +319,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/psychic.svg)
+              background: url(${API_URL}/images/front/types/psychic.svg)
                 no-repeat 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -334,7 +332,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/rock.svg) no-repeat
+              background: url(${API_URL}/images/front/types/rock.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -347,7 +345,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/steel.svg) no-repeat
+              background: url(${API_URL}/images/front/types/steel.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -360,7 +358,7 @@ const PokemonSection = styled.section`
               font-family: "Secular One", sans-serif;
               font-size: 0.8em;
               color: #ecf0f1;
-              background: url(${baseUrl}/images/front/types/water.svg) no-repeat
+              background: url(${API_URL}/images/front/types/water.svg) no-repeat
                 6px center;
               background-size: 16px;
               padding: 4px 8px 1px;
@@ -379,7 +377,7 @@ const PokemonSection = styled.section`
       display: flex;
       justify-content: center;
       align-items: center;
-      background-image: url(${baseUrl}/images/front/blue_bg.jpg);
+      background-image: url(${API_URL}/images/front/blue_bg.jpg);
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
@@ -447,11 +445,7 @@ const Pokemon = (props) => {
   console.log(error);
 
   function prevBtnHandle() {
-    fetch(
-      `https://pi-pokemon-production-cccc.up.railway.app/pokemons/${
-        parseInt(id) - 1
-      }`
-    )
+    fetch(`${API_URL}/pokemons/${parseInt(id) - 1}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
@@ -465,11 +459,7 @@ const Pokemon = (props) => {
   }
 
   async function nextBtnHandle() {
-    await fetch(
-      `https://pi-pokemon-production-cccc.up.railway.app/pokemons/${
-        parseInt(id) + 1
-      }`
-    )
+    await fetch(`${API_URL}/pokemons/${parseInt(id) + 1}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
@@ -484,14 +474,11 @@ const Pokemon = (props) => {
 
   async function deleteHandler(id) {
     const body = { id };
-    const response = await fetch(
-      "https://pi-pokemon-production-cccc.up.railway.app/pokemons",
-      {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      }
-    );
+    const response = await fetch(`${API_URL}/pokemons`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
     console.log(response.json());
     alert(`Pokemon #${id} deleted successfully`);
     history.push("/pokemon" + lastSearch);
@@ -598,14 +585,14 @@ const Pokemon = (props) => {
                   <div className="measures">
                     <div className="weight">
                       <img
-                        src={baseUrl + "/images/front/weight.png"}
+                        src={API_URL + "/images/front/weight.png"}
                         alt="Weight"
                       />
                       <p>{weight ? weight / 10 : 0.0} Kg</p>
                     </div>
                     <div className="height">
                       <img
-                        src={baseUrl + "/images/front/height.png"}
+                        src={API_URL + "/images/front/height.png"}
                         alt="Height"
                       />
 
@@ -636,7 +623,7 @@ const Pokemon = (props) => {
             </>
           ) : (
             <img
-              src={baseUrl + "/images/front/loading.gif"}
+              src={API_URL + "/images/front/loading.gif"}
               alt="Loading Pokeball"
             />
           )}
